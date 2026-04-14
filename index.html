@@ -3,127 +3,152 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>HookManga — AI Viral Hook Generator</title>
+<title>HookManga — AI Viral Engine</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:#050505;
+  color:white;
+  overflow-x:hidden;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: #070707;
-  color: white;
+/* GRID BACKGROUND */
+body::before{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:
+    linear-gradient(rgba(255,0,0,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,0,0,0.05) 1px, transparent 1px);
+  background-size:40px 40px;
+  z-index:-1;
 }
 
 /* HEADER */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #222;
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  border-bottom:1px solid #1a1a1a;
 }
 
-.logo {
-  font-family: 'Bebas Neue';
-  font-size: 24px;
-  letter-spacing: 2px;
+.logo{
+  font-family:'Bebas Neue';
+  font-size:24px;
+  letter-spacing:2px;
 }
 
-.wallet-btn {
-  background: #ff3b3b;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
+.wallet{
+  background:#ff2e2e;
+  border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  color:white;
 }
 
 /* HERO */
-.hero {
-  padding: 40px 20px;
-  text-align: center;
+.hero{
+  padding:50px 20px;
+  text-align:center;
 }
 
-.hero h1 {
-  font-family: 'Bebas Neue';
-  font-size: 42px;
-  line-height: 1.1;
+.hero h1{
+  font-family:'Bebas Neue';
+  font-size:48px;
+  line-height:1.1;
 }
 
-.hero span {
-  color: #ff3b3b;
+.hero span{
+  color:#ff2e2e;
+  text-shadow:0 0 12px rgba(255,0,0,0.7);
 }
 
-.hero p {
-  margin-top: 10px;
-  opacity: 0.7;
+.hero p{
+  margin-top:12px;
+  opacity:.7;
 }
 
 /* GENERATOR */
-.generator {
-  padding: 20px;
+.generator{
+  padding:20px;
 }
 
-.input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  margin-bottom: 10px;
+.card{
+  background:linear-gradient(180deg,#111,#0a0a0a);
+  border:1px solid #222;
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 0 20px rgba(255,0,0,0.08);
 }
 
-.generate-btn {
-  width: 100%;
-  padding: 14px;
-  background: #ff3b3b;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
+input{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  margin-bottom:10px;
+  background:#0f0f0f;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:#ff2e2e;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 /* OUTPUT */
-.output {
-  margin-top: 20px;
-  background: #111;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #222;
+.output{
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  background:#0f0f0f;
+  border:1px solid #222;
 }
 
-.score {
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.7;
+.score{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.7;
+}
+
+.copy{
+  margin-top:10px;
+  background:#222;
+}
+
+/* LOADING */
+.loading{
+  opacity:.5;
 }
 
 /* FOOTER */
-footer {
-  margin-top: 40px;
-  padding: 30px 20px;
-  text-align: center;
-  border-top: 1px solid #222;
+footer{
+  margin-top:50px;
+  padding:30px 20px;
+  text-align:center;
+  border-top:1px solid #1a1a1a;
 }
 
-footer p {
-  margin-top: 10px;
-  opacity: 0.5;
-}
-
-.badge {
-  margin-top: 20px;
+.badge{
+  margin-top:20px;
 }
 
 @media(min-width:768px){
-  .hero h1{
-    font-size: 64px;
-  }
+  .hero h1{font-size:70px;}
+  .generator{max-width:600px;margin:auto;}
 }
 </style>
 </head>
@@ -132,61 +157,75 @@ footer p {
 
 <header>
   <div class="logo">HOOK MANGA</div>
-  <button class="wallet-btn">Connect</button>
+  <button class="wallet">Connect</button>
 </header>
 
 <section class="hero">
   <h1>
-    INSTANTLY GENERATE<br/>
-    <span>VIRAL</span><br/>
+    GENERATE <span>VIRAL</span><br/>
     MANGA HOOKS
   </h1>
-  <p>Create scroll-stopping anime story hooks in seconds</p>
+  <p>Turn simple ideas into addictive story openings</p>
 </section>
 
 <section class="generator">
-  <input class="input" id="idea" placeholder="Enter your manga idea..."/>
-  <button class="generate-btn" onclick="generate()">Generate Hook</button>
+  <div class="card">
+    <input id="idea" placeholder="e.g. weak boy becomes strongest..." />
+    <button onclick="generate()">Generate</button>
 
-  <div class="output" id="output">
-    <b>“He died as a nobody… but woke up as the villain everyone fears.”</b>
-    <div class="score">
-      Curiosity: 92% • Emotion: 87% • Viral: 95%
+    <div id="output" class="output">
+      “He was the weakest... until the system chose him.”
+      <div class="score">Curiosity: 90% • Emotion: 85% • Viral: 94%</div>
+      <button class="copy" onclick="copy()">Copy</button>
     </div>
   </div>
 </section>
 
 <footer>
-  
   <div class="badge">
-    <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank" rel="noopener">
-      <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light&style=default" width="260"/>
+    <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
+      <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light&style=default" width="260">
     </a>
   </div>
-
-  <p>© 2026 HookManga — AI Story Intelligence Layer</p>
+  <p>AI Narrative Engine • 2026</p>
 </footer>
 
 <script>
 function generate(){
-  const ideas = [
-    "He was betrayed by his own guild… now he hunts them one by one.",
-    "The weakest student suddenly unlocks forbidden magic.",
-    "She can see how everyone will die… except herself.",
-    "A failed hero gets reborn as the final boss.",
-    "They laughed at him… until he broke the system."
-  ];
+  const el = document.getElementById("output");
+  el.classList.add("loading");
 
-  const random = ideas[Math.floor(Math.random() * ideas.length)];
+  setTimeout(()=>{
+    const input = document.getElementById("idea").value;
 
-  document.getElementById("output").innerHTML = `
-    <b>"${random}"</b>
-    <div class="score">
-      Curiosity: ${80 + Math.floor(Math.random()*20)}% • 
-      Emotion: ${75 + Math.floor(Math.random()*20)}% • 
-      Viral: ${85 + Math.floor(Math.random()*15)}%
-    </div>
-  `;
+    const hooks = [
+      `He was nothing... until ${input} changed everything.`,
+      `They mocked him—until ${input} unlocked his true power.`,
+      `In a world where ${input}, one boy breaks the rules.`,
+      `${input} was supposed to be impossible... but it happened.`,
+      `Everyone feared ${input}—except him.`
+    ];
+
+    const pick = hooks[Math.floor(Math.random()*hooks.length)];
+
+    el.innerHTML = `
+      "${pick}"
+      <div class="score">
+        Curiosity: ${80+Math.random()*20|0}% • 
+        Emotion: ${75+Math.random()*20|0}% • 
+        Viral: ${85+Math.random()*15|0}%
+      </div>
+      <button class="copy" onclick="copy()">Copy</button>
+    `;
+
+    el.classList.remove("loading");
+  },800);
+}
+
+function copy(){
+  const text = document.getElementById("output").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied");
 }
 </script>
 
