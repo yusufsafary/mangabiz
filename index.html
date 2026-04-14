@@ -6,56 +6,200 @@
 <title>HookManga</title>
 
 <style>
-body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial}
-header{display:flex;justify-content:space-between;padding:15px;border-bottom:1px solid #222}
-.logo img{height:40px}
-.hero{padding:80px 20px;text-align:center;background-size:cover;background-position:center}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:20px}
-.product-card{background:#111;border-radius:10px;overflow:hidden}
-.product-card img{width:100%}
-footer{text-align:center;padding:20px;border-top:1px solid #222}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  background:#0a0a0a;
+  color:#fff;
+}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  border-bottom:1px solid #1a1a1a;
+}
+
+.logo{
+  font-weight:bold;
+  font-size:18px;
+  letter-spacing:2px;
+}
+
+.logo span{
+  color:#ff2d55;
+}
+
+.btn{
+  background:#ff2d55;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+}
+
+/* HERO */
+.hero{
+  padding:80px 20px;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+.hero span{
+  color:#ff2d55;
+}
+
+.hero p{
+  opacity:0.7;
+}
+
+/* GENERATOR */
+.generator{
+  padding:30px 20px;
+  text-align:center;
+}
+
+textarea{
+  width:100%;
+  max-width:500px;
+  height:100px;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  background:#111;
+  color:#fff;
+  margin-bottom:15px;
+}
+
+.output{
+  margin-top:20px;
+  padding:15px;
+  background:#111;
+  border-radius:8px;
+}
+
+/* PRODUCT CARDS (NO IMAGE) */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  padding:30px 20px;
+}
+
+.product-card{
+  background:#111;
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  transition:0.3s;
+  border:1px solid #222;
+}
+
+.product-card:hover{
+  transform:translateY(-5px);
+  border-color:#ff2d55;
+}
+
+.product-card h3{
+  margin-bottom:5px;
+}
+
+.product-card p{
+  font-size:12px;
+  opacity:0.6;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:30px 20px;
+  border-top:1px solid #1a1a1a;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">
-    <!-- LOGO BASE64 -->
-    <img src="data:image/png;base64,{{LOGO_BASE64}}">
-  </div>
+  <div class="logo">HOOK<span>MANGA</span></div>
+  <button class="btn">Connect</button>
 </header>
 
-<!-- HERO COVER -->
-<section class="hero" style="background-image:url('data:image/png;base64,{{COVER_BASE64}}')">
-  <h1>Instantly Generate <span style="color:red">Viral</span> Manga Hooks</h1>
+<section class="hero">
+  <h1>Instantly Generate <span>Viral</span> Manga Hooks</h1>
+  <p>Create emotional, high-retention story hooks in seconds</p>
+</section>
+
+  
+<section class="generator">
+  <textarea id="input" placeholder="Describe your manga idea..."></textarea><br>
+  <button class="btn" onclick="generate()">Generate</button>
+
+  <div class="output" id="output">
+    Your hook will appear here...
+  </div>
 </section>
 
 <section class="products">
 
   <div class="product-card">
-    <img src="data:image/png;base64,{{DARK_BASE64}}">
+    <h3>DARK</h3>
+    <p>Psychological • Twist • Tragic</p>
   </div>
 
   <div class="product-card">
-    <img src="data:image/png;base64,{{ROMANCE_BASE64}}">
+    <h3>ROMANCE</h3>
+    <p>Love • Emotion • Heartbreak</p>
   </div>
 
   <div class="product-card">
-    <img src="data:image/png;base64,{{SHONEN_BASE64}}">
+    <h3>SHONEN</h3>
+    <p>Action • Growth • Power</p>
   </div>
 
   <div class="product-card">
-    <img src="data:image/png;base64,{{ISEKAI_BASE64}}">
+    <h3>ISEKAI</h3>
+    <p>Rebirth • Fantasy • Adventure</p>
   </div>
 
 </section>
 
 <footer>
+  <p>© 2026 HookManga — AI Powered</p>
+
+  <!-- ORYNTH BADGE -->
   <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
-    <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light">
+    <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light&style=default"
+    width="260">
   </a>
 </footer>
+
+<script>
+function generate(){
+  let hooks = [
+    "He thought it was just a normal day… until everything collapsed.",
+    "In a world where no one survives past 20… he’s already 21.",
+    "She fell in love with the one person she was meant to kill.",
+    "The moment he awakened his power, humanity became his enemy.",
+    "He died once… now he's back to rewrite fate."
+  ];
+
+  document.getElementById("output").innerText =
+    hooks[Math.floor(Math.random() * hooks.length)];
+}
+</script>
 
 </body>
 </html>
