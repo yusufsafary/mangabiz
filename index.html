@@ -1,33 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>HookManga — AI Viral Engine</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HookManga — AI Manga Hook Generator</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:'Inter',sans-serif;
-  background:#050505;
-  color:white;
-  overflow-x:hidden;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
 }
 
-/* GRID BACKGROUND */
-body::before{
-  content:"";
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:
-    linear-gradient(rgba(255,0,0,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,0,0,0.05) 1px, transparent 1px);
-  background-size:40px 40px;
-  z-index:-1;
+body{
+  background:#0a0a0a;
+  color:#fff;
 }
 
 /* HEADER */
@@ -35,120 +23,114 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:16px;
-  border-bottom:1px solid #1a1a1a;
+  padding:15px 20px;
+  border-bottom:1px solid #222;
 }
 
-.logo{
-  font-family:'Bebas Neue';
-  font-size:24px;
-  letter-spacing:2px;
+.logo img{
+  height:30px;
 }
 
-.wallet{
-  background:#ff2e2e;
+.btn{
+  background:#ff2d55;
   border:none;
   padding:10px 16px;
-  border-radius:10px;
-  color:white;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
 }
 
 /* HERO */
 .hero{
-  padding:50px 20px;
   text-align:center;
+  padding:80px 20px;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.95)),
+    url('cover.jpg') center/cover no-repeat;
 }
 
 .hero h1{
-  font-family:'Bebas Neue';
-  font-size:48px;
-  line-height:1.1;
+  font-size:32px;
+  margin-bottom:10px;
 }
 
 .hero span{
-  color:#ff2e2e;
-  text-shadow:0 0 12px rgba(255,0,0,0.7);
+  color:#ff2d55;
 }
 
 .hero p{
-  margin-top:12px;
-  opacity:.7;
+  opacity:0.7;
+  margin-bottom:20px;
 }
 
 /* GENERATOR */
 .generator{
-  padding:20px;
+  padding:30px 20px;
+  text-align:center;
 }
 
-.card{
-  background:linear-gradient(180deg,#111,#0a0a0a);
-  border:1px solid #222;
-  border-radius:16px;
-  padding:16px;
-  box-shadow:0 0 20px rgba(255,0,0,0.08);
-}
-
-input{
+textarea{
   width:100%;
-  padding:14px;
-  border-radius:10px;
+  max-width:500px;
+  height:100px;
+  padding:12px;
+  border-radius:8px;
   border:none;
-  margin-bottom:10px;
-  background:#0f0f0f;
-  color:white;
+  margin-bottom:15px;
 }
 
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:#ff2e2e;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-/* OUTPUT */
 .output{
-  margin-top:15px;
-  padding:14px;
+  margin-top:20px;
+  padding:15px;
+  background:#111;
+  border-radius:8px;
+}
+
+/* PRODUCTS */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  padding:30px 20px;
+}
+
+.product-card{
+  background:#111;
   border-radius:12px;
-  background:#0f0f0f;
-  border:1px solid #222;
+  overflow:hidden;
+  text-align:center;
+  transition:0.3s;
 }
 
-.score{
+.product-card:hover{
+  transform:scale(1.05);
+}
+
+.product-card img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+}
+
+.product-card h3{
   margin-top:10px;
+}
+
+.product-card p{
   font-size:12px;
-  opacity:.7;
-}
-
-.copy{
-  margin-top:10px;
-  background:#222;
-}
-
-/* LOADING */
-.loading{
-  opacity:.5;
+  opacity:0.6;
+  padding-bottom:10px;
 }
 
 /* FOOTER */
 footer{
-  margin-top:50px;
-  padding:30px 20px;
   text-align:center;
-  border-top:1px solid #1a1a1a;
+  padding:30px 20px;
+  border-top:1px solid #222;
 }
 
-.badge{
-  margin-top:20px;
-}
-
-@media(min-width:768px){
-  .hero h1{font-size:70px;}
-  .generator{max-width:600px;margin:auto;}
+footer img{
+  margin-top:15px;
 }
 </style>
 </head>
@@ -156,76 +138,82 @@ footer{
 <body>
 
 <header>
-  <div class="logo">HOOK MANGA</div>
-  <button class="wallet">Connect</button>
+  <div class="logo">
+    <img src="logo.jpg" alt="HookManga">
+  </div>
+  <button class="btn">Connect</button>
 </header>
 
 <section class="hero">
-  <h1>
-    GENERATE <span>VIRAL</span><br/>
-    MANGA HOOKS
-  </h1>
-  <p>Turn simple ideas into addictive story openings</p>
+  <h1>Instantly Generate <span>Viral</span> Manga Hooks</h1>
+  <p>Create emotional, high-retention story hooks in seconds</p>
 </section>
 
 <section class="generator">
-  <div class="card">
-    <input id="idea" placeholder="e.g. weak boy becomes strongest..." />
-    <button onclick="generate()">Generate</button>
+  <textarea id="input" placeholder="Describe your manga idea..."></textarea><br>
+  <button class="btn" onclick="generate()">Generate</button>
 
-    <div id="output" class="output">
-      “He was the weakest... until the system chose him.”
-      <div class="score">Curiosity: 90% • Emotion: 85% • Viral: 94%</div>
-      <button class="copy" onclick="copy()">Copy</button>
-    </div>
+  <div class="output" id="output">Your hook will appear here...</div>
+</section>
+
+<section class="products">
+
+  <div class="product-card">
+    <img src="dark.jpg">
+    <h3>DARK</h3>
+    <p>Twisted • Psychological</p>
   </div>
+
+  <div class="product-card">
+    <img src="romance.jpg">
+    <h3>ROMANCE</h3>
+    <p>Love • Emotion</p>
+  </div>
+
+  <div class="product-card">
+    <img src="shonen.jpg">
+    <h3>SHONEN</h3>
+    <p>Action • Power</p>
+  </div>
+
+  <div class="product-card">
+    <img src="isekai.jpg">
+    <h3>ISEKAI</h3>
+    <p>Rebirth • Fantasy</p>
+  </div>
+
 </section>
 
 <footer>
-  <div class="badge">
-    <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
-      <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light&style=default" width="260">
-    </a>
-  </div>
-  <p>AI Narrative Engine • 2026</p>
+  <p>© 2026 HookManga — AI Powered</p>
+
+  <!-- ORYNTH BADGE -->
+  <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank" rel="noopener">
+    <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light&style=default"
+    alt="Featured on Orynth" width="260" height="80"/>
+  </a>
 </footer>
 
 <script>
 function generate(){
-  const el = document.getElementById("output");
-  el.classList.add("loading");
+  let input = document.getElementById("input").value;
 
-  setTimeout(()=>{
-    const input = document.getElementById("idea").value;
+  if(!input){
+    alert("Write something first!");
+    return;
+  }
 
-    const hooks = [
-      `He was nothing... until ${input} changed everything.`,
-      `They mocked him—until ${input} unlocked his true power.`,
-      `In a world where ${input}, one boy breaks the rules.`,
-      `${input} was supposed to be impossible... but it happened.`,
-      `Everyone feared ${input}—except him.`
-    ];
+  let hooks = [
+    "He thought it was just a normal day… until everything collapsed.",
+    "In a world where no one survives past 20… he’s already 21.",
+    "She fell in love with the one person she was meant to kill.",
+    "The moment he awakened his power, humanity became his enemy.",
+    "He died once… now he's back to rewrite fate."
+  ];
 
-    const pick = hooks[Math.floor(Math.random()*hooks.length)];
+  let random = hooks[Math.floor(Math.random() * hooks.length)];
 
-    el.innerHTML = `
-      "${pick}"
-      <div class="score">
-        Curiosity: ${80+Math.random()*20|0}% • 
-        Emotion: ${75+Math.random()*20|0}% • 
-        Viral: ${85+Math.random()*15|0}%
-      </div>
-      <button class="copy" onclick="copy()">Copy</button>
-    `;
-
-    el.classList.remove("loading");
-  },800);
-}
-
-function copy(){
-  const text = document.getElementById("output").innerText;
-  navigator.clipboard.writeText(text);
-  alert("Copied");
+  document.getElementById("output").innerText = random;
 }
 </script>
 
