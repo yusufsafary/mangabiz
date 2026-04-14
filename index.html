@@ -6,20 +6,14 @@
 <title>HookManga</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Inter, system-ui, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
 
 body{
   background:#050505;
   color:white;
-  overflow-x:hidden;
 }
 
-/* BACKGROUND GLOW */
+/* BG */
 .bg{
   position:fixed;
   width:100%;
@@ -33,53 +27,34 @@ body{
 header{
   display:flex;
   justify-content:space-between;
-  align-items:center;
   padding:14px 18px;
   border-bottom:1px solid rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
 }
 
-.logo{
-  font-weight:700;
-  letter-spacing:1px;
-}
-
-.logo span{
-  color:#ff2d55;
-}
-
-.lang{
-  display:flex;
-  gap:10px;
-  font-size:13px;
-}
+.logo{font-weight:700}
+.logo span{color:#ff2d55}
 
 .lang span{
+  margin-left:10px;
   opacity:0.6;
   cursor:pointer;
-}
-
-.lang span:hover{
-  opacity:1;
 }
 
 /* MENU */
 .menu{
   display:flex;
   justify-content:center;
-  gap:25px;
-  padding:14px;
+  gap:20px;
+  padding:12px;
   font-size:14px;
 }
 
 .menu span{
   opacity:0.5;
   cursor:pointer;
-  transition:0.3s;
 }
 
-.menu span.active,
-.menu span:hover{
+.menu span.active{
   opacity:1;
   color:#ff2d55;
 }
@@ -87,13 +62,11 @@ header{
 /* HERO */
 .hero{
   text-align:center;
-  padding:60px 20px 30px;
+  padding:50px 20px 20px;
 }
 
 .hero h1{
-  font-size:26px;
-  line-height:1.3;
-  margin-bottom:10px;
+  font-size:24px;
 }
 
 .hero span{
@@ -113,9 +86,7 @@ header{
   margin:20px auto;
   padding:20px;
   background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.06);
   border-radius:16px;
-  backdrop-filter:blur(20px);
 }
 
 /* INPUT */
@@ -125,48 +96,49 @@ textarea{
   background:#0f0f0f;
   border:none;
   border-radius:12px;
-  padding:14px;
+  padding:12px;
   color:white;
-  font-size:14px;
 }
 
 /* BUTTON */
 button{
   width:100%;
-  margin-top:14px;
+  margin-top:12px;
   padding:14px;
   border:none;
   border-radius:12px;
-  background:linear-gradient(90deg,#ff2d55,#ff5c7a);
+  background:#ff2d55;
   color:white;
-  font-weight:600;
   cursor:pointer;
-  transition:0.3s;
-}
-
-button:hover{
-  transform:scale(1.02);
-  box-shadow:0 0 20px rgba(255,45,85,0.4);
 }
 
 /* OUTPUT */
 .output{
-  margin-top:14px;
-  padding:14px;
+  margin-top:12px;
+  padding:12px;
   background:#0f0f0f;
   border-radius:12px;
-  font-size:14px;
 }
 
 /* SECTION */
-.section{display:none;}
-.section.active{display:block;}
+.section{display:none}
+.section.active{display:block}
 
 /* FOOTER */
 footer{
   text-align:center;
   padding:40px 20px;
-  opacity:0.6;
+  opacity:0.7;
+}
+
+.badge{
+  margin-top:15px;
+}
+
+.badge img{
+  width:170px;
+  border-radius:12px;
+  opacity:0.9;
 }
 </style>
 </head>
@@ -177,7 +149,6 @@ footer{
 
 <header>
   <div class="logo">HOOK<span>MANGA</span></div>
-
   <div class="lang">
     <span onclick="setLang('en')">EN</span>
     <span onclick="setLang('jp')">JP</span>
@@ -195,15 +166,15 @@ footer{
 <div id="home" class="section active">
 
   <div class="hero">
-    <h1 data-en="Generate <span>Viral</span> Manga Hooks Instantly"
-        data-jp="瞬時に<span>バイラル</span>漫画フックを生成"></h1>
+    <h1 data-en="Generate <span>Viral</span> Manga Hooks"
+        data-jp="バイラル<span>漫画フック</span>を生成"></h1>
 
-    <p data-en="Emotion-driven hooks for creators in seconds"
-       data-jp="クリエイターのための感情的なフックを数秒で生成"></p>
+    <p data-en="Create emotional story hooks in seconds"
+       data-jp="数秒で感情的なストーリーを生成"></p>
   </div>
 
   <div class="card">
-    <textarea id="input" placeholder="Describe your manga idea..."></textarea>
+    <textarea id="input" placeholder="Describe your idea..."></textarea>
     <button onclick="generate()">Generate</button>
     <div class="output" id="output">...</div>
   </div>
@@ -213,23 +184,32 @@ footer{
 <!-- HOW -->
 <div id="how" class="section card">
   <h2>How</h2><br>
-  <p>Describe → Generate → Go Viral</p>
+  <p data-en="Describe → Generate → Go Viral"
+     data-jp="説明 → 生成 → バイラル"></p>
 </div>
 
 <!-- ABOUT -->
 <div id="about" class="section card">
   <h2>About</h2><br>
-  <p>HookManga is an AI-powered tool designed to craft high-retention story hooks.</p>
+  <p data-en="AI tool for creating high-retention manga hooks."
+     data-jp="高いリテンションの漫画フックを生成するAIツール。"></p>
 </div>
 
 <!-- LEGAL -->
 <div id="legal" class="section card">
   <h2>Legal</h2><br>
-  <p>All outputs are generated content. Use responsibly.</p>
+  <p data-en="Use at your own risk."
+     data-jp="自己責任で使用してください。"></p>
 </div>
 
 <footer>
-  © 2026 HookManga
+  <p>© 2026 HookManga</p>
+
+  <div class="badge">
+    <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
+      <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=dark">
+    </a>
+  </div>
 </footer>
 
 <script>
@@ -243,9 +223,9 @@ function show(id){
 
 function generate(){
   const hooks = [
-    "He thought it was over… but it was just the beginning.",
-    "She killed him once. Now he’s back.",
-    "The world forgot him—but he remembers everything.",
+    "He thought it was over… but it was just beginning.",
+    "She loved him… but had to kill him.",
+    "The world ended yesterday. He remembers.",
     "He became the villain to save her.",
     "One choice changed everything."
   ];
