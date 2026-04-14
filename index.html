@@ -6,17 +6,8 @@
 <title>HookManga</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
-}
-
-body{
-  background:#0a0a0a;
-  color:#fff;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0a0a0a;color:#fff}
 
 /* HEADER */
 header{
@@ -27,105 +18,71 @@ header{
   border-bottom:1px solid #1a1a1a;
 }
 
-.logo{
-  font-weight:bold;
-  font-size:18px;
-  letter-spacing:2px;
+.logo{font-weight:bold;letter-spacing:2px}
+.logo span{color:#ff2d55}
+
+nav a{
+  margin:0 10px;
+  cursor:pointer;
+  opacity:0.7;
 }
 
-.logo span{
-  color:#ff2d55;
+nav a:hover{opacity:1}
+
+.lang{
+  cursor:pointer;
+  margin-left:10px;
 }
 
-.btn{
+/* SECTIONS */
+.section{
+  display:none;
+  padding:40px 20px;
+  max-width:800px;
+  margin:auto;
+}
+
+.active{display:block}
+
+/* HERO */
+.hero{text-align:center}
+.hero h1{font-size:30px;margin-bottom:10px}
+.hero span{color:#ff2d55}
+
+/* GENERATOR */
+textarea{
+  width:100%;
+  height:100px;
+  background:#111;
+  border:none;
+  border-radius:8px;
+  padding:10px;
+  color:#fff;
+}
+
+button{
+  margin-top:10px;
   background:#ff2d55;
   border:none;
-  padding:10px 16px;
+  padding:10px 15px;
   border-radius:8px;
   color:white;
   cursor:pointer;
 }
 
-/* HERO */
-.hero{
-  padding:80px 20px;
-  text-align:center;
-}
-
-.hero h1{
-  font-size:32px;
-  margin-bottom:10px;
-}
-
-.hero span{
-  color:#ff2d55;
-}
-
-.hero p{
-  opacity:0.7;
-}
-
-/* GENERATOR */
-.generator{
-  padding:30px 20px;
-  text-align:center;
-}
-
-textarea{
-  width:100%;
-  max-width:500px;
-  height:100px;
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  background:#111;
-  color:#fff;
-  margin-bottom:15px;
-}
-
 .output{
-  margin-top:20px;
-  padding:15px;
+  margin-top:15px;
+  padding:10px;
   background:#111;
   border-radius:8px;
-}
-
-/* PRODUCT CARDS (NO IMAGE) */
-.products{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:15px;
-  padding:30px 20px;
-}
-
-.product-card{
-  background:#111;
-  border-radius:12px;
-  padding:20px;
-  text-align:center;
-  transition:0.3s;
-  border:1px solid #222;
-}
-
-.product-card:hover{
-  transform:translateY(-5px);
-  border-color:#ff2d55;
-}
-
-.product-card h3{
-  margin-bottom:5px;
-}
-
-.product-card p{
-  font-size:12px;
-  opacity:0.6;
 }
 
 /* FOOTER */
 footer{
   text-align:center;
-  padding:30px 20px;
+  padding:20px;
   border-top:1px solid #1a1a1a;
+  margin-top:40px;
 }
 </style>
 </head>
@@ -134,70 +91,114 @@ footer{
 
 <header>
   <div class="logo">HOOK<span>MANGA</span></div>
-  <button class="btn">Connect</button>
+
+  <nav>
+    <a onclick="show('home')">Home</a>
+    <a onclick="show('how')">How To</a>
+    <a onclick="show('about')">About</a>
+    <a onclick="show('legal')">Legal</a>
+  </nav>
+
+  <div>
+    <span class="lang" onclick="setLang('en')">EN</span> |
+    <span class="lang" onclick="setLang('jp')">JP</span>
+  </div>
 </header>
 
-<section class="hero">
-  <h1>Instantly Generate <span>Viral</span> Manga Hooks</h1>
-  <p>Create emotional, high-retention story hooks in seconds</p>
+<!-- HOME -->
+<section id="home" class="section active">
+  <div class="hero">
+    <h1 data-en="Instantly Generate Viral Manga Hooks"
+        data-jp="瞬時にバイラル漫画フックを生成">
+    </h1>
+
+    <p data-en="Create emotional, high-retention story hooks in seconds"
+       data-jp="数秒で感情を動かすストーリーフックを作成">
+    </p>
+  </div>
+
+  <br>
+
+  <textarea id="input"></textarea>
+  <button onclick="generate()">Generate</button>
+
+  <div class="output" id="output">...</div>
 </section>
 
-  
-<section class="generator">
-  <textarea id="input" placeholder="Describe your manga idea..."></textarea><br>
-  <button class="btn" onclick="generate()">Generate</button>
+<!-- HOW TO -->
+<section id="how" class="section">
+  <h2 data-en="How to Use" data-jp="使い方"></h2><br>
 
-  <div class="output" id="output">
-    Your hook will appear here...
-  </div>
+  <p data-en="1. Describe your manga idea"
+     data-jp="1. あなたの漫画のアイデアを入力"></p><br>
+
+  <p data-en="2. Click generate"
+     data-jp="2. 生成ボタンをクリック"></p><br>
+
+  <p data-en="3. Get a viral hook instantly"
+     data-jp="3. バイラルフックを取得"></p>
 </section>
 
-<section class="products">
+<!-- ABOUT -->
+<section id="about" class="section">
+  <h2 data-en="About HookManga" data-jp="HookMangaについて"></h2><br>
 
-  <div class="product-card">
-    <h3>DARK</h3>
-    <p>Psychological • Twist • Tragic</p>
-  </div>
+  <p data-en="HookManga is an AI-powered tool designed to help creators generate compelling manga story hooks."
+     data-jp="HookMangaは漫画の魅力的なストーリーフックを生成するAIツールです。"></p><br>
 
-  <div class="product-card">
-    <h3>ROMANCE</h3>
-    <p>Love • Emotion • Heartbreak</p>
-  </div>
+  <p data-en="Built for creators, storytellers, and Web3 artists."
+     data-jp="クリエイターやストーリーテラー、Web3アーティストのために開発されています。"></p>
+</section>
 
-  <div class="product-card">
-    <h3>SHONEN</h3>
-    <p>Action • Growth • Power</p>
-  </div>
+<!-- LEGAL -->
+<section id="legal" class="section">
+  <h2 data-en="Legal" data-jp="法的情報"></h2><br>
 
-  <div class="product-card">
-    <h3>ISEKAI</h3>
-    <p>Rebirth • Fantasy • Adventure</p>
-  </div>
+  <p data-en="This tool is provided as-is without warranty."
+     data-jp="本ツールは保証なしで提供されます。"></p><br>
 
+  <p data-en="Users are responsible for their own content."
+     data-jp="ユーザーは自身のコンテンツに責任を持ちます。"></p><br>
+
+  <p data-en="We do not store personal data."
+     data-jp="個人データは保存されません。"></p>
 </section>
 
 <footer>
-  <p>© 2026 HookManga — AI Powered</p>
+  <p>© 2026 HookManga</p>
 
-  <!-- ORYNTH BADGE -->
   <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
-    <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light&style=default"
-    width="260">
+    <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light" width="200">
   </a>
 </footer>
 
 <script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+let lang = "en";
+
+function setLang(l){
+  lang = l;
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    el.innerText = el.dataset[l];
+  });
+}
+
+setLang("en");
+
 function generate(){
   let hooks = [
-    "He thought it was just a normal day… until everything collapsed.",
-    "In a world where no one survives past 20… he’s already 21.",
-    "She fell in love with the one person she was meant to kill.",
-    "The moment he awakened his power, humanity became his enemy.",
-    "He died once… now he's back to rewrite fate."
+    "He thought it was safe… until it wasn't.",
+    "She loved him… but he was her enemy.",
+    "The world ended yesterday. He remembers.",
+    "He awakened power—and lost everything.",
+    "This time, he won’t fail again."
   ];
-
   document.getElementById("output").innerText =
-    hooks[Math.floor(Math.random() * hooks.length)];
+    hooks[Math.floor(Math.random()*hooks.length)];
 }
 </script>
 
