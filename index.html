@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="HookManga — AIによるバイラルマンガフック生成ツール。TikTok・Reels・YouTube Shorts向け。">
+<title>HookManga.biz.id — ウイルスマンガフック生成AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Bebas+Neue&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#ff3c50;
+  --red2:#ff1a35;
+  --bg:#06060e;
+  --bg2:#0d0d1a;
+  --bg3:#12121f;
+  --card:#13131f;
+  --border:#ff3c5033;
+  --text:#e8e8f4;
+  --muted:#7878a0;
+  --gold:#ffd700;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;overflow-x:hidden;line-height:1.6}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:64px;
+  background:rgba(6,6,14,.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;
+  color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;
+}
+.nav-logo span{color:var(--red)}
+.nav-logo img{height:36px;border-radius:6px}
+.nav-links{display:flex;gap:20px;list-style:none;align-items:center}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
+  transition:.2s;letter-spacing:.5px;
+}
+.nav-links a:hover{color:var(--red)}
+.nav-cta{
+  background:var(--red);color:#fff;border:none;padding:9px 20px;
+  border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:.5px;
+  transition:.2s;white-space:nowrap;
+}
+.nav-cta:hover{background:var(--red2);transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{width:24px;height:2px;background:var(--text);transition:.3s;display:block}
+.mobile-menu{
+  display:none;position:fixed;top:64px;left:0;right:0;
+  background:rgba(6,6,14,.98);backdrop-filter:blur(20px);
+  padding:24px;z-index:99;border-bottom:1px solid var(--border);
+  flex-direction:column;gap:16px;
+}
+.mobile-menu a{color:var(--muted);text-decoration:none;font-size:16px;padding:8px 0;border-bottom:1px solid var(--border)}
+.mobile-menu.open{display:flex}
+
+/* ─── TICKER ─── */
+.ticker{
+  background:var(--red);padding:10px 0;overflow:hidden;
+  white-space:nowrap;position:relative;margin-top:64px;
+}
+.ticker-inner{
+  display:inline-block;animation:ticker 28s linear infinite;
+  font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:#fff;
+}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:80px 20px 60px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,60,80,.18) 0%,transparent 70%),
+              radial-gradient(ellipse 60% 40% at 50% 100%,rgba(80,20,200,.15) 0%,transparent 70%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.hero-content{position:relative;z-index:2;max-width:860px;margin:0 auto}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,60,80,.12);border:1px solid rgba(255,60,80,.4);
+  padding:8px 18px;border-radius:999px;font-size:13px;color:var(--red);
+  margin-bottom:28px;font-weight:700;letter-spacing:1px;
+  animation:fadedown .6s ease both;
+}
+.hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-chapter{
+  font-size:12px;font-weight:700;color:var(--muted);letter-spacing:4px;
+  text-transform:uppercase;margin-bottom:16px;
+  animation:fadedown .7s .1s ease both;
+}
+h1{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,12vw,120px);
+  line-height:.95;letter-spacing:4px;margin-bottom:20px;
+  animation:fadedown .7s .2s ease both;
+}
+h1 .red{color:var(--red)}
+h1 .glow{text-shadow:0 0 40px rgba(255,60,80,.5)}
+.hero-jp{
+  font-size:clamp(16px,3.5vw,26px);color:var(--red);font-weight:900;
+  letter-spacing:2px;margin-bottom:16px;
+  animation:fadedown .7s .3s ease both;
+}
+.hero-sub{
+  font-size:clamp(14px,2.5vw,18px);color:var(--muted);max-width:560px;
+  margin:0 auto 36px;line-height:1.7;
+  animation:fadedown .7s .4s ease both;
+}
+.hero-tags{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;
+  animation:fadedown .7s .5s ease both;
+}
+.tag{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.2s;
+}
+.tag:hover,.tag.active{background:rgba(255,60,80,.2);border-color:var(--red);color:#fff}
+.hero-btns{
+  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  animation:fadedown .7s .6s ease both;
+}
+.btn-primary{
+  background:var(--red);color:#fff;padding:16px 32px;border-radius:10px;
+  font-size:15px;font-weight:700;text-decoration:none;
+  transition:.2s;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{background:var(--red2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,60,80,.4)}
+.btn-outline{
+  border:1px solid rgba(255,255,255,.2);color:var(--text);padding:16px 32px;
+  border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;
+  transition:.2s;background:transparent;display:inline-flex;align-items:center;gap:8px;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.btn-outline:hover{border-color:var(--red);color:var(--red)}
+
+/* Preview card floating in hero */
+.hero-preview{
+  position:relative;z-index:2;margin-top:60px;
+  display:inline-block;
+}
+.preview-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:24px;max-width:540px;margin:0 auto;
+  text-align:left;position:relative;overflow:hidden;
+}
+.preview-card::before{
+  content:'';position:absolute;top:-1px;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),transparent);
+}
+.preview-top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.preview-dot{width:8px;height:8px;border-radius:50%;background:var(--red)}
+.preview-label{font-size:12px;color:var(--muted);letter-spacing:2px;font-weight:600}
+.preview-hook{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,4vw,32px);line-height:1.1;margin-bottom:16px;letter-spacing:1px}
+.preview-tags{display:flex;gap:8px;flex-wrap:wrap}
+.ptag{
+  background:rgba(255,60,80,.15);border:1px solid rgba(255,60,80,.3);
+  padding:4px 12px;border-radius:999px;font-size:12px;color:var(--red);font-weight:600;
+}
+
+/* ─── STATS BAR ─── */
+.stats{
+  background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:40px 20px;
+}
+.stats-grid{
+  max-width:900px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;
+}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,56px);color:var(--red);line-height:1}
+.stat-lbl{font-size:13px;color:var(--muted);margin-top:4px;letter-spacing:.5px}
+
+/* ─── SECTION BASE ─── */
+section{padding:80px 20px;max-width:1100px;margin:0 auto}
+.section-full{max-width:100%;padding:80px 0}
+.section-tag{
+  display:inline-block;font-size:12px;font-weight:700;color:var(--red);
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;
+}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,64px);line-height:1;margin-bottom:8px;letter-spacing:2px}
+.section-sub{color:var(--muted);font-size:16px;margin-bottom:48px}
+
+/* ─── COVER IMAGE SECTION ─── */
+.cover-section{
+  width:100%;max-height:420px;overflow:hidden;
+  position:relative;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.cover-section img{width:100%;height:420px;object-fit:cover;display:block}
+.cover-section::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(6,6,14,.6) 0%,transparent 40%,transparent 60%,rgba(6,6,14,.6) 100%),
+             linear-gradient(to bottom,transparent 60%,rgba(6,6,14,.8));
+}
+
+/* ─── PRODUCT CARDS ─── */
+.products{padding:80px 20px}
+.products-inner{max-width:1100px;margin:0 auto}
+.products-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+}
+.product-card{
+  border-radius:16px;overflow:hidden;border:1px solid var(--border);
+  transition:.3s;cursor:pointer;position:relative;
+}
+.product-card:hover{transform:translateY(-8px);border-color:var(--red);box-shadow:0 20px 60px rgba(255,60,80,.2)}
+.product-card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.product-info{
+  padding:16px;background:var(--card);
+  border-top:1px solid var(--border);
+}
+.product-info h3{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin-bottom:4px}
+.product-info p{font-size:13px;color:var(--muted)}
+
+/* ─── HOW IT WORKS ─── */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.how-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px;position:relative;overflow:hidden;transition:.3s;
+}
+.how-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),transparent);
+}
+.how-card:hover{border-color:var(--red);transform:translateY(-4px)}
+.how-num{
+  font-family:'Bebas Neue',sans-serif;font-size:64px;color:rgba(255,60,80,.15);
+  line-height:1;margin-bottom:8px;
+}
+.how-icon{font-size:32px;margin-bottom:12px}
+.how-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.how-card p{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ─── GENERATOR ─── */
+.gen-wrap{background:var(--bg2);padding:80px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.gen-inner{max-width:700px;margin:0 auto}
+.gen-token-badge{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,60,80,.08);border:1px solid rgba(255,60,80,.3);
+  border-radius:12px;padding:16px 20px;margin-bottom:32px;font-size:14px;
+}
+.gen-token-badge .icon{font-size:24px}
+.gen-token-badge strong{color:var(--red)}
+.gen-label{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.gen-input{
+  width:100%;background:var(--card);border:1px solid var(--border);
+  color:var(--text);padding:16px 20px;border-radius:12px;font-size:15px;
+  resize:vertical;min-height:100px;font-family:'Noto Sans JP',sans-serif;
+  transition:.2s;outline:none;
+}
+.gen-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,60,80,.15)}
+.gen-genre-row{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.genre-btn{
+  background:var(--card);border:1px solid var(--border);
+  padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;
+  cursor:pointer;color:var(--text);transition:.2s;font-family:'Noto Sans JP',sans-serif;
+}
+.genre-btn:hover,.genre-btn.active{background:rgba(255,60,80,.2);border-color:var(--red);color:#fff}
+.gen-toggles{display:flex;gap:12px;margin:20px 0;flex-wrap:wrap}
+.toggle-btn{
+  background:var(--card);border:1px solid var(--border);
+  padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;color:var(--muted);transition:.2s;font-family:'Noto Sans JP',sans-serif;
+  display:flex;align-items:center;gap:6px;
+}
+.toggle-btn.active{background:rgba(255,60,80,.2);border-color:var(--red);color:var(--red)}
+.gen-submit{
+  width:100%;background:var(--red);color:#fff;border:none;
+  padding:18px;border-radius:12px;font-size:16px;font-weight:700;
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;letter-spacing:.5px;
+  transition:.2s;margin-top:8px;
+}
+.gen-submit:hover{background:var(--red2);transform:translateY(-1px);box-shadow:0 8px 30px rgba(255,60,80,.4)}
+.gen-output{
+  margin-top:28px;background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px;display:none;position:relative;overflow:hidden;
+}
+.gen-output.show{display:block;animation:fadeup .4s ease}
+.gen-output::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),#ff80a0,transparent);
+}
+.out-section{margin-bottom:20px}
+.out-section-label{
+  font-size:11px;font-weight:700;color:var(--red);letter-spacing:3px;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.out-text{font-size:15px;line-height:1.7;color:var(--text)}
+.out-hook{font-family:'Bebas Neue',sans-serif;font-size:clamp(22px,4vw,32px);line-height:1.1;letter-spacing:1px}
+.copy-btn{
+  position:absolute;top:16px;right:16px;
+  background:rgba(255,60,80,.15);border:1px solid rgba(255,60,80,.3);
+  color:var(--red);padding:6px 14px;border-radius:6px;font-size:12px;
+  cursor:pointer;transition:.2s;font-family:'Noto Sans JP',sans-serif;
+}
+.copy-btn:hover{background:rgba(255,60,80,.3)}
+.loading{text-align:center;padding:40px 0;color:var(--muted)}
+.loading-dots::after{content:'...';animation:dots 1.5s infinite}
+@keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
+
+/* ─── SAMPLES ─── */
+.samples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.sample-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px;transition:.3s;position:relative;overflow:hidden;
+}
+.sample-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top right,rgba(255,60,80,.06),transparent 60%);
+  pointer-events:none;
+}
+.sample-card:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 16px 50px rgba(255,60,80,.15)}
+.sample-genre{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.sample-genre-icon{font-size:20px}
+.sample-genre-name{font-size:12px;font-weight:700;color:var(--red);letter-spacing:2px;text-transform:uppercase}
+.sample-hook{font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3vw,26px);line-height:1.1;letter-spacing:1px;margin-bottom:12px}
+.sample-twist{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.sample-video{font-size:13px;color:var(--text);border-top:1px solid var(--border);padding-top:16px}
+.sample-video strong{color:var(--red);font-size:11px;letter-spacing:2px;display:block;margin-bottom:6px}
+
+/* ─── TEAM ─── */
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.team-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:24px;text-align:center;transition:.3s;
+}
+.team-card:hover{border-color:var(--red);transform:translateY(-4px)}
+.team-avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),#800020);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:900;margin:0 auto 16px;
+  border:2px solid var(--border);
+}
+.team-name{font-size:15px;font-weight:700;margin-bottom:4px}
+.team-role{font-size:12px;color:var(--red);font-weight:600;margin-bottom:4px;letter-spacing:.5px}
+.team-bio{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ─── PARTNERSHIP ─── */
+.partner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.partner-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px;transition:.3s;
+}
+.partner-card:hover{border-color:var(--red);transform:translateY(-4px)}
+.partner-icon{font-size:36px;margin-bottom:12px}
+.partner-cat{font-size:11px;font-weight:700;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.partner-card h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.partner-card p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.partner-tags{display:flex;gap:6px;flex-wrap:wrap}
+.partner-tag{
+  background:rgba(255,60,80,.12);border:1px solid rgba(255,60,80,.25);
+  padding:3px 10px;border-radius:999px;font-size:11px;color:var(--red);font-weight:600;
+}
+
+/* ─── WHITEPAPER ─── */
+.wp-wrap{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.wp-inner{max-width:800px;margin:0 auto;padding:80px 20px}
+.wp-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:40px}
+.wp-meta-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px}
+.wp-meta-label{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+.wp-meta-val{font-size:15px;font-weight:700;color:var(--red)}
+.wp-section{margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--border)}
+.wp-section:last-child{border-bottom:none}
+.wp-section-num{font-size:11px;font-weight:700;color:var(--red);letter-spacing:3px;margin-bottom:8px;text-transform:uppercase}
+.wp-section h3{font-size:22px;font-weight:700;margin-bottom:12px}
+.wp-section p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:12px}
+.wp-list{list-style:none;padding:0}
+.wp-list li{
+  padding:10px 0 10px 20px;color:var(--muted);font-size:14px;line-height:1.7;
+  border-bottom:1px solid rgba(255,60,80,.08);position:relative;
+}
+.wp-list li::before{content:'▸';color:var(--red);position:absolute;left:0}
+
+/* ─── ABOUT ─── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-text h2{margin-bottom:16px}
+.about-text p{color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:16px}
+.about-img{border-radius:20px;overflow:hidden;border:1px solid var(--border)}
+.about-img img{width:100%;display:block}
+
+/* ─── CTA BANNER ─── */
+.cta-banner{
+  background:linear-gradient(135deg,rgba(255,60,80,.15),rgba(80,20,200,.1));
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:80px 20px;text-align:center;
+}
+.cta-banner h2{margin-bottom:12px}
+.cta-banner p{color:var(--muted);font-size:16px;margin-bottom:32px}
+.cta-banner .social-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.social-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:10px;font-size:14px;font-weight:700;
+  text-decoration:none;transition:.2s;font-family:'Noto Sans JP',sans-serif;
+}
+.social-btn.tw{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff}
+.social-btn.tw:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+.social-btn.tg{background:rgba(0,136,204,.15);border:1px solid rgba(0,136,204,.3);color:#29aee3}
+.social-btn.tg:hover{background:rgba(0,136,204,.25);transform:translateY(-2px)}
+.social-btn.jup{background:rgba(255,60,80,.15);border:1px solid rgba(255,60,80,.3);color:var(--red)}
+.social-btn.jup:hover{background:rgba(255,60,80,.25);transform:translateY(-2px)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:48px 20px 32px;
+}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;margin-bottom:40px}
+.footer-brand .logo-txt{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff}
+.footer-brand .logo-txt span{color:var(--red)}
+.footer-brand p{color:var(--muted);font-size:14px;margin-top:8px;max-width:280px}
+.footer-links{display:flex;gap:40px;flex-wrap:wrap}
+.footer-col h4{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+.footer-col a{display:block;color:var(--muted);text-decoration:none;font-size:14px;margin-bottom:8px;transition:.2s}
+.footer-col a:hover{color:var(--red)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;gap:12px;font-size:13px;color:var(--muted)}
+.footer-bottom a{color:var(--muted);text-decoration:none}
+.footer-bottom a:hover{color:var(--red)}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadedown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .how-grid{grid-template-columns:repeat(2,1fr)}
+  .samples-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .partner-grid{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+  .about-img{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-top{flex-direction:column}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .products-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-primary,.btn-outline{width:100%;justify-content:center}
+  nav{padding:0 16px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .footer-links{flex-direction:column;gap:24px}
+  h2{font-size:36px}
+}
+
+/* Token announce bar */
+.token-bar{
+  background:linear-gradient(90deg,rgba(255,60,80,.12),rgba(255,60,80,.06));
+  border-bottom:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;justify-content:center;
+  gap:12px;font-size:13px;flex-wrap:wrap;text-align:center;
+}
+.token-bar strong{color:var(--red)}
+.token-bar a{color:var(--red);font-weight:700;text-decoration:none}
+.token-bar a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="logo.jpg" alt="HookManga Logo">
+    HOOK<span>MANGA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#generator">⚡ 生成器</a></li>
+    <li><a href="#how">使い方</a></li>
+    <li><a href="#samples">サンプル</a></li>
+    <li><a href="#team">チーム</a></li>
+    <li><a href="#whitepaper">白書</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#partnership">提携</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('generator').scrollIntoView({behavior:'smooth'})">🔗 ウォレット接続</button>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#generator" onclick="toggleMenu()">⚡ 生成器</a>
+  <a href="#how" onclick="toggleMenu()">使い方</a>
+  <a href="#samples" onclick="toggleMenu()">サンプル</a>
+  <a href="#team" onclick="toggleMenu()">チーム</a>
+  <a href="#whitepaper" onclick="toggleMenu()">白書</a>
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#partnership" onclick="toggleMenu()">提携</a>
+</div>
+
+<!-- TOKEN BAR -->
+<div class="token-bar" style="margin-top:64px">
+  🪙 <strong>$HOOK</strong> トークン — Jupiter Exchangeで今すぐ購入 &nbsp;
+  <a href="https://jup.ag/swap/SOL-N8h6H4KF2ubdFVeJgkxoYJtejeMm1Q2wVcy6bLeLory" target="_blank">→ Jupiterで購入</a>
+  &nbsp;|&nbsp;
+  <a href="https://x.com/hookmanga" target="_blank">𝕏 フォロー</a>
+  &nbsp;|&nbsp;
+  <a href="https://t.me/hookmanga" target="_blank">✈️ Telegram</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    &nbsp;⚡ HOOK MANGA · ウイルスマンガフック生成AI · AI VIRAL HOOK GENERATOR · 🌑 DARK · 💘 ROMANCE · ⚡ SHONEN · 🌀 ISEKAI · 50K+ フック生成 · 12K+ クリエイター · HOOKMANGA.BIZ.ID &nbsp;
+    &nbsp;⚡ HOOK MANGA · ウイルスマンガフック生成AI · AI VIRAL HOOK GENERATOR · 🌑 DARK · 💘 ROMANCE · ⚡ SHONEN · 🌀 ISEKAI · 50K+ フック生成 · 12K+ クリエイター · HOOKMANGA.BIZ.ID &nbsp;
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span></span> Chapter 01 · β ベータ 2026
+    </div>
+    <p class="hero-chapter">HOOKMANGA.BIZ.ID · AIパワード</p>
+    <h1>
+      <span class="red glow">バイラル</span><br>
+      マンガフック<br>
+      <span style="font-size:.7em;color:var(--muted)">を瞬時に生成</span>
+    </h1>
+    <p class="hero-jp">Create Viral Manga Hooks in Seconds</p>
+    <p class="hero-sub">TikTok・Reels・YouTube Shorts向けに感情的なストーリーフック、キャラクターコンセプト、動画アイデアをAIで生成。</p>
+    <div class="hero-tags">
+      <span class="tag active">🌑 Dark · 闇</span>
+      <span class="tag">💘 Romance · 恋愛</span>
+      <span class="tag">⚡ Shonen · 少年</span>
+      <span class="tag">🌀 Isekai · 異世界</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#generator" class="btn-primary">⚡ 今すぐ生成する</a>
+      <a href="#samples" class="btn-outline">サンプルを見る →</a>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW CARD -->
+<div style="text-align:center;padding:0 20px 80px;position:relative;z-index:2">
+  <p style="font-size:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">Live Preview · AI生成サンプル</p>
+  <div class="preview-card" style="max-width:520px;margin:0 auto">
+    <div class="preview-top">
+      <div class="preview-dot"></div>
+      <span class="preview-label">✨ HOOK READY · 完成</span>
+    </div>
+    <div class="preview-hook">彼は王国を救った。<br>そして、自分こそが悪役だと知った。</div>
+    <div style="font-size:14px;color:var(--muted);margin:12px 0">He saved the kingdom. Then discovered he was the villain all along.</div>
+    <div class="preview-tags">
+      <span class="ptag">🌑 Dark</span>
+      <span class="ptag">Viral Mode ON</span>
+      <span class="ptag">✨ Hook</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-grid">
+    <div><div class="stat-num">50K+</div><div class="stat-lbl">フック生成 · Hooks Generated</div></div>
+    <div><div class="stat-num">12K+</div><div class="stat-lbl">クリエイター · Creators</div></div>
+    <div><div class="stat-num">4</div><div class="stat-lbl">ジャンル · Genres</div></div>
+    <div><div class="stat-num">98%</div><div class="stat-lbl">満足度 · Satisfaction</div></div>
+  </div>
+</div>
+
+<!-- COVER IMAGE -->
+<div class="cover-section">
+  <img src="cover.jpg" alt="HookManga Cover">
+</div>
+
+<!-- PRODUCT CARDS -->
+<div class="products" id="genres">
+  <div class="products-inner">
+    <p class="section-tag">ジャンル · Genres</p>
+    <h2>4つのマンガジャンル</h2>
+    <p class="section-sub">あなたのコンテンツに合ったジャンルを選んでください</p>
+    <div class="products-grid">
+      <div class="product-card" onclick="selectGenre('dark')">
+        <img src="product_dark.jpg" alt="Dark Genre">
+        <div class="product-info">
+          <h3>🌑 DARK · 闇</h3>
+          <p>心理的なツイスト、悲劇的な展開</p>
+        </div>
+      </div>
+      <div class="product-card" onclick="selectGenre('romance')">
+        <img src="product_romance.jpg" alt="Romance Genre">
+        <div class="product-info">
+          <h3>💘 ROMANCE · 恋愛</h3>
+          <p>禁断の愛、切ないストーリー</p>
+        </div>
+      </div>
+      <div class="product-card" onclick="selectGenre('shonen')">
+        <img src="product_shonen.jpg" alt="Shonen Genre">
+        <div class="product-info">
+          <h3>⚡ SHONEN · 少年</h3>
+          <p>最弱から最強へ、トーナメントバトル</p>
+        </div>
+      </div>
+      <div class="product-card" onclick="selectGenre('isekai')">
+        <img src="product_isekai.jpg" alt="Isekai Genre">
+        <div class="product-info">
+          <h3>🌀 ISEKAI · 異世界</h3>
+          <p>転生・チートビルド・世界観</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <p class="section-tag">使い方 · How It Works</p>
+  <h2>3ステップでバイラルフック完成</h2>
+  <p class="section-sub">三つのステップ — HookMangaが粗いアイデアを感情的なフックへ変換</p>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">一</div>
+      <div class="how-icon">💡</div>
+      <h3>アイデアを入力</h3>
+      <p>ジャンル、感情、トロープ、キャラクターのアイデアを入力。または Dark・Romance・Shonen・Isekai のプリセットを選択。</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">二</div>
+      <div class="how-icon">🤖</div>
+      <h3>AIがフックを生成</h3>
+      <p>AIがあなたの入力を分析し、感情的なワンライナー、コンセプト、予想外のツイスト、3つの動画シーンアイデアを生成。</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">三</div>
+      <div class="how-icon">🔥</div>
+      <h3>バイラルモード起動</h3>
+      <p>バイラルモードをONにして好奇心ギャップと感情フックを最大強度に増幅。すべてのラインがリプレイを促します。</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">四</div>
+      <div class="how-icon">🎭</div>
+      <h3>キャラクターを構築</h3>
+      <p>キャラクターモードに切り替えて、名前・原型・能力・致命的な欠点・3つの映画的シーンを持つ完全なプロフィールを生成。</p>
+    </div>
+  </div>
+</section>
+
+<!-- GENERATOR -->
+<div class="gen-wrap" id="generator">
+  <div class="gen-inner">
+    <p class="section-tag" style="display:block;margin-bottom:12px">Generator · 生成器</p>
+    <h2 style="margin-bottom:8px">フックを生成する</h2>
+    <p style="color:var(--muted);margin-bottom:32px">アイデアを入力してください · Enter Your Idea Below</p>
+    <div class="gen-token-badge">
+      <span class="icon">🪙</span>
+      <div>
+        <strong>Beta Phase · ベータ期間 — $HOOK トークン必須</strong><br>
+        <span style="color:var(--muted);font-size:13px">最低$50の$HOKKトークンを保有して生成。ウォレットアドレス＋IPごとに5回の生成。</span>
+      </div>
+    </div>
+    <div class="gen-label">Your Idea · アイデア</div>
+    <textarea class="gen-input" id="genInput" placeholder="例：転生した勇者が実は元魔王だった。または単にジャンルを入力..."></textarea>
+    <div class="gen-label" style="margin-top:20px">Genre Presets · ジャンル</div>
+    <div class="gen-genre-row">
+      <button class="genre-btn active" data-g="dark" onclick="setGenre(this)">🌑 Dark · 闇</button>
+      <button class="genre-btn" data-g="romance" onclick="setGenre(this)">💘 Romance · 恋愛</button>
+      <button class="genre-btn" data-g="shonen" onclick="setGenre(this)">⚡ Shonen · 少年</button>
+      <button class="genre-btn" data-g="isekai" onclick="setGenre(this)">🌀 Isekai · 異世界</button>
+    </div>
+    <div class="gen-label">Pro Features · プロ機能</div>
+    <div class="gen-toggles">
+      <button class="toggle-btn active" id="viralToggle" onclick="this.classList.toggle('active')">🚀 Viral Mode · バイラル</button>
+      <button class="toggle-btn" id="charToggle" onclick="this.classList.toggle('active')">🎭 Character · キャラ</button>
+    </div>
+    <button class="gen-submit" onclick="generateHook()">⚡ Generate Hook · 生成</button>
+    <div class="gen-output" id="genOutput">
+      <button class="copy-btn" onclick="copyOutput()">📋 Copy</button>
+      <div id="genContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SAMPLES -->
+<section id="samples">
+  <p class="section-tag">Sample Output · サンプル</p>
+  <h2>生成サンプルを見る</h2>
+  <p class="section-sub">生成サンプル · What HookManga Generates — リアルな生成例</p>
+  <div class="samples-grid">
+    <div class="sample-card">
+      <div class="sample-genre"><span class="sample-genre-icon">🌑</span><span class="sample-genre-name">Dark · 闇</span></div>
+      <div class="sample-hook">彼は王国を救った。<br>そして悪役になった。</div>
+      <div class="sample-twist">英雄が闇の主を倒した後、自分こそが全ての悲劇を仕組んだと気づく記憶が蘇る。彼の「封印された力」は彼を守るためではなく、全員を彼から守るために封印されていた。</div>
+      <div class="sample-video">
+        <strong>VIDEO IDEA · 動画アイデア</strong>
+        勝利の祝宴 → 凍りついた表情 → 回想：彼の筆跡が悪の書物に → 王国が歓声を上げる中、彼は一人去る
+      </div>
+    </div>
+    <div class="sample-card">
+      <div class="sample-genre"><span class="sample-genre-icon">💘</span><span class="sample-genre-name">Romance · 恋愛</span></div>
+      <div class="sample-hook">彼女はすべてを忘れた。<br>彼は永遠に覚えていた。</div>
+      <div class="sample-twist">事故で記憶を失った彼女と、彼女のすべてを覚えている彼。再び恋に落ちてもらうため、毎日出会い直す男の話。</div>
+      <div class="sample-video">
+        <strong>VIDEO IDEA · 動画アイデア</strong>
+        初対面のふりをする彼 → 彼女の反応を見守る目 → 押し入れに隠された二人の写真 → 「なぜ泣いてるの？」
+      </div>
+    </div>
+    <div class="sample-card">
+      <div class="sample-genre"><span class="sample-genre-icon">⚡</span><span class="sample-genre-name">Shonen · 少年</span></div>
+      <div class="sample-hook">世界最弱。<br>第一話まで。</div>
+      <div class="sample-twist">全員に笑われた少年が、実は封印されていた「禁忌の力」の持ち主だったことが判明。師匠も敵も全員が本当の力を知らなかった。</div>
+      <div class="sample-video">
+        <strong>VIDEO IDEA · 動画アイデア</strong>
+        訓練で最下位 → 本番直前に封印が解ける → スローモーション変身 → 「あいつは…誰だ？」
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <p class="section-tag">The Team · チーム</p>
+  <h2>クリエイターのために作られた</h2>
+  <p class="section-sub">クリエイターのために · Built by Creators, for Creators</p>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">AR</div>
+      <div class="team-name">ArthouseBase</div>
+      <div class="team-role">Founder & Vision</div>
+      <div class="team-bio">アニメカルチャーとWeb3の交差点で活動。複数のバイラルコンテンツツールを立ち上げ。</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">OC</div>
+      <div class="team-name">OtakuCompassAI</div>
+      <div class="team-role">Web3 Developer</div>
+      <div class="team-bio">フルスタックWeb3開発者。SolanaトークンとAIインフラを構築。</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="font-family:'Noto Sans JP'">陸</div>
+      <div class="team-name">Riku Kaito</div>
+      <div class="team-role">AI Engineer</div>
+      <div class="team-bio">プロンプトエンジニアリングとAIファインチューニングの専門家。HookMangaのAIシステムを設計。</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="font-family:'Noto Sans JP'">雪</div>
+      <div class="team-name">Yuki Mori</div>
+      <div class="team-role">Content & Manga</div>
+      <div class="team-bio">フォロワー20万人超のマンガアーティスト。すべてのフック形式の品質を検証。</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="font-family:'Noto Sans JP'">空</div>
+      <div class="team-name">Sora Nakamura</div>
+      <div class="team-role">Growth & Community</div>
+      <div class="team-bio">TikTok戦略家。複数のアニメクリエイターアカウントを10万人以上に成長させた。</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHITEPAPER -->
+<div class="wp-wrap" id="whitepaper">
+  <div class="wp-inner">
+    <p class="section-tag">Whitepaper · 白書</p>
+    <h2>ビジョン · The HookManga Vision</h2>
+    <div class="wp-meta">
+      <div class="wp-meta-item"><div class="wp-meta-label">Version</div><div class="wp-meta-val">v1.0</div></div>
+      <div class="wp-meta-item"><div class="wp-meta-label">Published</div><div class="wp-meta-val">2026年3月</div></div>
+      <div class="wp-meta-item"><div class="wp-meta-label">Status</div><div class="wp-meta-val">Active · Beta</div></div>
+      <div class="wp-meta-item"><div class="wp-meta-label">Chain</div><div class="wp-meta-val">Solana</div></div>
+    </div>
+    <div class="wp-section">
+      <div class="wp-section-num">01 — エグゼクティブサマリー · Executive Summary</div>
+      <h3>HookMangaとは？</h3>
+      <p>HookMangaは2026年に開始されたAIツールで、アニメコンテンツクリエイターがバイラルな短編動画フックを生成できるよう支援します。TikTokクリエイター、マンガストーリーテラー、成長中のアニメファン向けに、AIによるストーリーフック、キャラクターコンセプト、動画シーンアイデアを単一の高速ワークフローに統合。</p>
+    </div>
+    <div class="wp-section">
+      <div class="wp-section-num">02 — 問題 · The Problem</div>
+      <h3>クリエイターが直面する課題</h3>
+      <ul class="wp-list">
+        <li><strong>フック疲れ：</strong>使い古されたトロープと予測可能なオープニングが低い視聴時間とアルゴリズム性能につながる</li>
+        <li><strong>時間コスト：</strong>魅力的なストーリーフックをゼロから書くのに1本につき30〜60分かかる</li>
+        <li><strong>構造の欠如：</strong>フックを良くする方法は知っていても、繰り返し使えるシステムがない</li>
+        <li><strong>汎用AI：</strong>既存のAIツールはマンガストーリーテリングの感情的言語に欠ける</li>
+      </ul>
+    </div>
+    <div class="wp-section">
+      <div class="wp-section-num">03 — ソリューション · Our Solution</div>
+      <h3>AIパワードのマンガストーリーテリング</h3>
+      <p>HookMangaはマンガストーリーテリングの感情的アーキテクチャに特化したAIシステムで、これらのギャップに対応します。Hook Engine、Viral Mode、Character Builder、Genre Presetsの4つの柱で構成されています。</p>
+    </div>
+    <div class="wp-section">
+      <div class="wp-section-num">04 — トークノミクス · Tokenomics</div>
+      <h3>$HOOK Token</h3>
+      <p>$HOOKトークンはSolanaチェーン上で発行。ベータ期間中は最低$50相当のトークン保有者が生成ツールを利用可能。トークンは将来的に無制限生成、プロ機能、ガバナンスに利用予定。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-tag">About · について</p>
+      <h2>マンガの<span style="color:var(--red)">未来</span>を構築</h2>
+      <p>HookMangaはマンガファン、開発者、Web3ビルダーの情熱的なチームによって作られました。使命はシンプル：クリエイターがバイラルになれるよう支援すること。</p>
+      <p>私たちのAIはマンガストーリーテリングの感情的アーキテクチャで訓練されており、他の汎用AIツールとは一線を画す高品質なフックを生成します。</p>
+      <p>2026年創設。Solanaエコシステム上で運営。hookmanga.biz.id</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+        <a href="https://x.com/hookmanga" class="btn-primary" target="_blank">𝕏 フォロー</a>
+        <a href="https://t.me/hookmanga" class="btn-outline" target="_blank">✈️ Telegram</a>
+      </div>
+    </div>
+    <div class="about-img">
+      <img src="cover.jpg" alt="HookManga About">
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERSHIP -->
+<section id="partnership" style="max-width:1100px">
+  <p class="section-tag">Partnership · パートナーシップ</p>
+  <h2>潜在的なパートナー</h2>
+  <p class="section-sub">Potential Partnerships — マンガとWeb3エコシステムとのコラボを歓迎</p>
+  <div class="partner-grid">
+    <div class="partner-card">
+      <div class="partner-icon">📚</div>
+      <div class="partner-cat">Manga Platform</div>
+      <h3>Webtoon & Tapas</h3>
+      <p>デジタルマンガ配信プラットフォームとの直接統合。HookManga生成ストーリーを何百万人もの読者に届ける。</p>
+      <div class="partner-tags"><span class="partner-tag">Distribution</span><span class="partner-tag">Content</span></div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-icon">🔗</div>
+      <div class="partner-cat">Web3 · DeFi</div>
+      <h3>Solana Ecosystem</h3>
+      <p>マンガNFTプロジェクト、Solanaローンチパッド、Web3マーケットプレイスと協力して$HOOKトークンのユーティリティを拡大。</p>
+      <div class="partner-tags"><span class="partner-tag">NFT</span><span class="partner-tag">Solana</span><span class="partner-tag">DeFi</span></div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-icon">🎌</div>
+      <div class="partner-cat">Anime Studio</div>
+      <h3>Indie Anime Producers</h3>
+      <p>バイラルスクリプトとストーリーコンセプトを求めるインディーアニメスタジオ向けの初期パイプラインを提供。</p>
+      <div class="partner-tags"><span class="partner-tag">IP</span><span class="partner-tag">Animation</span></div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-icon">🎥</div>
+      <div class="partner-cat">Creator Economy</div>
+      <h3>TikTok & YouTube MCN</h3>
+      <p>マルチチャンネルネットワークとアニメクリエイタータレントエージェンシーにHookMangaを専用ツールとして提供。</p>
+      <div class="partner-tags"><span class="partner-tag">TikTok</span><span class="partner-tag">Shorts</span><span class="partner-tag">MCN</span></div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-icon">🪙</div>
+      <div class="partner-cat">Web3 · Token</div>
+      <h3>DEX & CEX Listing</h3>
+      <p>強力な流動性プールで$HOOKトークンをリストし、より広範なWeb3トレーダーとインベスターコミュニティへのアクセスを開放。</p>
+      <div class="partner-tags"><span class="partner-tag">DEX</span><span class="partner-tag">Liquidity</span><span class="partner-tag">$HOOK</span></div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-icon">🤖</div>
+      <div class="partner-cat">AI & Tech</div>
+      <h3>AI Tools & Infrastructure</h3>
+      <p>画像生成AI、音声AI、自動動画編集ツールと統合し、完全なエンドツーエンドのマンガコンテンツ制作パイプラインを構築。</p>
+      <div class="partner-tags"><span class="partner-tag">AI</span><span class="partner-tag">Automation</span><span class="partner-tag">Pipeline</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:40px">
+    <a href="https://x.com/hookmanga" class="btn-primary" target="_blank" style="margin-right:12px">𝕏 DM on Twitter</a>
+    <a href="https://t.me/hookmanga" class="btn-outline" target="_blank">✈️ Telegram</a>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <h2>今すぐ<span style="color:var(--red)">バイラル</span>になろう</h2>
+  <p>HookMangaに参加して、マンガコンテンツの未来を一緒に作ろう</p>
+  <div class="social-btns">
+    <a href="https://x.com/hookmanga" class="social-btn tw" target="_blank">𝕏 Twitterをフォロー</a>
+    <a href="https://t.me/hookmanga" class="social-btn tg" target="_blank">✈️ Telegramに参加</a>
+    <a href="https://jup.ag/swap/SOL-N8h6H4KF2ubdFVeJgkxoYJtejeMm1Q2wVcy6bLeLory" class="social-btn jup" target="_blank">🪙 $HOOKを購入</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-txt">HOOK<span>MANGA</span></div>
+        <p>AIパワードのバイラルマンガフック生成ツール。TikTok・Reels・YouTube Shorts向け。</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">hookmanga.biz.id · 2026</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <a href="#generator">⚡ 生成器</a>
+          <a href="#how">使い方</a>
+          <a href="#samples">サンプル</a>
+          <a href="#team">チーム</a>
+        </div>
+        <div class="footer-col">
+          <h4>Info</h4>
+          <a href="#whitepaper">白書</a>
+          <a href="#about">About</a>
+          <a href="#partnership">提携</a>
+        </div>
+        <div class="footer-col">
+          <h4>Social</h4>
+          <a href="https://x.com/hookmanga" target="_blank">𝕏 Twitter</a>
+          <a href="https://t.me/hookmanga" target="_blank">✈️ Telegram</a>
+          <a href="https://jup.ag/swap/SOL-N8h6H4KF2ubdFVeJgkxoYJtejeMm1Q2wVcy6bLeLory" target="_blank">🪙 Buy $HOOK</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 hookmanga.biz.id · All rights reserved</div>
+      <div>Built on <a href="https://solana.com" target="_blank">Solana</a> · Powered by AI</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Mobile menu
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// Genre selection from product cards
+function selectGenre(g){
+  document.getElementById('generator').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    document.querySelectorAll('.genre-btn').forEach(b=>{
+      b.classList.toggle('active', b.dataset.g===g);
+    });
+  }, 600);
+}
+
+function setGenre(el){
+  document.querySelectorAll('.genre-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Hero tag toggle
+document.querySelectorAll('.tag').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tag').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+
+// Generator
+async function generateHook(){
+  const idea = document.getElementById('genInput').value.trim();
+  const genreBtn = document.querySelector('.genre-btn.active');
+  const genre = genreBtn ? genreBtn.dataset.g : 'dark';
+  const viral = document.getElementById('viralToggle').classList.contains('active');
+  const char  = document.getElementById('charToggle').classList.contains('active');
+
+  const genreMap = {dark:'🌑 Dark · 闇',romance:'💘 Romance · 恋愛',shonen:'⚡ Shonen · 少年',isekai:'🌀 Isekai · 異世界'};
+  const out = document.getElementById('genOutput');
+  const cnt = document.getElementById('genContent');
+  out.classList.add('show');
+  cnt.innerHTML = '<div class="loading">生成中<span class="loading-dots"></span> Generating</div>';
+
+  const prompt = `You are HookManga AI, specialized in generating viral manga hooks for short-form video (TikTok, Reels, YouTube Shorts).
+
+Generate a complete viral manga hook package in JSON format ONLY (no markdown, no backticks).
+
+Genre: ${genreMap[genre]}
+User idea: ${idea || '(use an interesting random concept for this genre)'}
+Viral mode: ${viral ? 'ON - maximum emotional intensity and curiosity gap' : 'OFF'}
+Character mode: ${char ? 'ON - include character profile' : 'OFF'}
+
+JSON structure:
+{
+  "hook": "One powerful emotional sentence (bilingual: Japanese first, then English)",
+  "concept": "2-3 sentence story concept",
+  "twist": "The unexpected twist that makes it viral",
+  "video_ideas": ["scene 1", "scene 2", "scene 3"],
+  "character": ${char ? '{"name":"JP name + kanji","archetype":"archetype description","power":"unique power","fatal_flaw":"fatal flaw"}' : 'null'}
+}`;
+
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(i=>i.text||'').join('');
+    let parsed;
+    try{
+      const clean = text.replace(/```json|```/g,'').trim();
+      parsed = JSON.parse(clean);
+    }catch{
+      cnt.innerHTML = `<div style="color:var(--muted);font-size:14px;line-height:1.8">${text}</div>`;
+      return;
+    }
+
+    let html = `
+      <div class="out-section">
+        <div class="out-section-label">✨ Hook · フック</div>
+        <div class="out-hook">${parsed.hook||''}</div>
+      </div>
+      <div class="out-section">
+        <div class="out-section-label">📖 Concept · コンセプト</div>
+        <div class="out-text">${parsed.concept||''}</div>
+      </div>
+      <div class="out-section">
+        <div class="out-section-label">💥 Twist · ツイスト</div>
+        <div class="out-text">${parsed.twist||''}</div>
+      </div>
+      <div class="out-section">
+        <div class="out-section-label">🎬 Video Ideas · 動画アイデア</div>
+        <div class="out-text">${(parsed.video_ideas||[]).map((s,i)=>`<div style="margin-bottom:6px">${i+1}. ${s}</div>`).join('')}</div>
+      </div>`;
+
+    if(parsed.character){
+      const c = parsed.character;
+      html += `
+        <div class="out-section" style="background:rgba(255,60,80,.06);border:1px solid rgba(255,60,80,.2);border-radius:12px;padding:20px;margin-top:8px">
+          <div class="out-section-label">🎭 Character · キャラクター</div>
+          <div class="out-text">
+            <div style="margin-bottom:8px"><strong style="color:var(--red)">名前 NAME</strong><br>${c.name||''}</div>
+            <div style="margin-bottom:8px"><strong style="color:var(--red)">原型 ARCHETYPE</strong><br>${c.archetype||''}</div>
+            <div style="margin-bottom:8px"><strong style="color:var(--red)">能力 POWER</strong><br>${c.power||''}</div>
+            <div><strong style="color:var(--red)">弱点 FATAL FLAW</strong><br>${c.fatal_flaw||''}</div>
+          </div>
+        </div>`;
+    }
+    cnt.innerHTML = html;
+  }catch(e){
+    cnt.innerHTML = `<div style="color:#ff8090">エラー · Error: ${e.message}</div>`;
+  }
+}
+
+function copyOutput(){
+  const text = document.getElementById('genContent').innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy',2000);
+  });
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.style.opacity='1',e.target.style.transform='none';
+  });
+},{threshold:.1});
+document.querySelectorAll('.how-card,.sample-card,.team-card,.partner-card,.product-card').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(24px)';
+  el.style.transition='opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
