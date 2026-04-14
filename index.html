@@ -6,200 +6,260 @@
 <title>HookManga</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0a0a0a;color:#fff}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter, system-ui, sans-serif;
+}
+
+body{
+  background:#050505;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND GLOW */
+.bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle at 30% 20%, rgba(255,45,85,0.15), transparent 40%),
+             radial-gradient(circle at 70% 80%, rgba(0,120,255,0.12), transparent 40%);
+  z-index:-1;
+}
 
 /* HEADER */
 header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:15px 20px;
-  border-bottom:1px solid #1a1a1a;
+  padding:14px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
 }
 
-.logo{font-weight:bold;letter-spacing:2px}
-.logo span{color:#ff2d55}
-
-nav a{
-  margin:0 10px;
-  cursor:pointer;
-  opacity:0.7;
+.logo{
+  font-weight:700;
+  letter-spacing:1px;
 }
 
-nav a:hover{opacity:1}
+.logo span{
+  color:#ff2d55;
+}
 
 .lang{
+  display:flex;
+  gap:10px;
+  font-size:13px;
+}
+
+.lang span{
+  opacity:0.6;
   cursor:pointer;
-  margin-left:10px;
 }
 
-/* SECTIONS */
-.section{
-  display:none;
-  padding:40px 20px;
-  max-width:800px;
-  margin:auto;
+.lang span:hover{
+  opacity:1;
 }
 
-.active{display:block}
+/* MENU */
+.menu{
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  padding:14px;
+  font-size:14px;
+}
+
+.menu span{
+  opacity:0.5;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.menu span.active,
+.menu span:hover{
+  opacity:1;
+  color:#ff2d55;
+}
 
 /* HERO */
-.hero{text-align:center}
-.hero h1{font-size:30px;margin-bottom:10px}
-.hero span{color:#ff2d55}
+.hero{
+  text-align:center;
+  padding:60px 20px 30px;
+}
 
-/* GENERATOR */
+.hero h1{
+  font-size:26px;
+  line-height:1.3;
+  margin-bottom:10px;
+}
+
+.hero span{
+  background:linear-gradient(90deg,#ff2d55,#ff7aa2);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+  opacity:0.6;
+  font-size:14px;
+}
+
+/* CARD */
+.card{
+  max-width:500px;
+  margin:20px auto;
+  padding:20px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  backdrop-filter:blur(20px);
+}
+
+/* INPUT */
 textarea{
   width:100%;
-  height:100px;
-  background:#111;
+  height:120px;
+  background:#0f0f0f;
   border:none;
-  border-radius:8px;
-  padding:10px;
-  color:#fff;
-}
-
-button{
-  margin-top:10px;
-  background:#ff2d55;
-  border:none;
-  padding:10px 15px;
-  border-radius:8px;
+  border-radius:12px;
+  padding:14px;
   color:white;
-  cursor:pointer;
+  font-size:14px;
 }
 
-.output{
-  margin-top:15px;
-  padding:10px;
-  background:#111;
-  border-radius:8px;
+/* BUTTON */
+button{
+  width:100%;
+  margin-top:14px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff2d55,#ff5c7a);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
 }
+
+button:hover{
+  transform:scale(1.02);
+  box-shadow:0 0 20px rgba(255,45,85,0.4);
+}
+
+/* OUTPUT */
+.output{
+  margin-top:14px;
+  padding:14px;
+  background:#0f0f0f;
+  border-radius:12px;
+  font-size:14px;
+}
+
+/* SECTION */
+.section{display:none;}
+.section.active{display:block;}
 
 /* FOOTER */
 footer{
   text-align:center;
-  padding:20px;
-  border-top:1px solid #1a1a1a;
-  margin-top:40px;
+  padding:40px 20px;
+  opacity:0.6;
 }
 </style>
 </head>
 
 <body>
 
+<div class="bg"></div>
+
 <header>
   <div class="logo">HOOK<span>MANGA</span></div>
 
-  <nav>
-    <a onclick="show('home')">Home</a>
-    <a onclick="show('how')">How To</a>
-    <a onclick="show('about')">About</a>
-    <a onclick="show('legal')">Legal</a>
-  </nav>
-
-  <div>
-    <span class="lang" onclick="setLang('en')">EN</span> |
-    <span class="lang" onclick="setLang('jp')">JP</span>
+  <div class="lang">
+    <span onclick="setLang('en')">EN</span>
+    <span onclick="setLang('jp')">JP</span>
   </div>
 </header>
 
-<!-- HOME -->
-<section id="home" class="section active">
-  <div class="hero">
-    <h1 data-en="Instantly Generate Viral Manga Hooks"
-        data-jp="瞬時にバイラル漫画フックを生成">
-    </h1>
+<div class="menu">
+  <span onclick="show('home')" class="active">Home</span>
+  <span onclick="show('how')">How</span>
+  <span onclick="show('about')">About</span>
+  <span onclick="show('legal')">Legal</span>
+</div>
 
-    <p data-en="Create emotional, high-retention story hooks in seconds"
-       data-jp="数秒で感情を動かすストーリーフックを作成">
-    </p>
+<!-- HOME -->
+<div id="home" class="section active">
+
+  <div class="hero">
+    <h1 data-en="Generate <span>Viral</span> Manga Hooks Instantly"
+        data-jp="瞬時に<span>バイラル</span>漫画フックを生成"></h1>
+
+    <p data-en="Emotion-driven hooks for creators in seconds"
+       data-jp="クリエイターのための感情的なフックを数秒で生成"></p>
   </div>
 
-  <br>
+  <div class="card">
+    <textarea id="input" placeholder="Describe your manga idea..."></textarea>
+    <button onclick="generate()">Generate</button>
+    <div class="output" id="output">...</div>
+  </div>
 
-  <textarea id="input"></textarea>
-  <button onclick="generate()">Generate</button>
+</div>
 
-  <div class="output" id="output">...</div>
-</section>
-
-<!-- HOW TO -->
-<section id="how" class="section">
-  <h2 data-en="How to Use" data-jp="使い方"></h2><br>
-
-  <p data-en="1. Describe your manga idea"
-     data-jp="1. あなたの漫画のアイデアを入力"></p><br>
-
-  <p data-en="2. Click generate"
-     data-jp="2. 生成ボタンをクリック"></p><br>
-
-  <p data-en="3. Get a viral hook instantly"
-     data-jp="3. バイラルフックを取得"></p>
-</section>
+<!-- HOW -->
+<div id="how" class="section card">
+  <h2>How</h2><br>
+  <p>Describe → Generate → Go Viral</p>
+</div>
 
 <!-- ABOUT -->
-<section id="about" class="section">
-  <h2 data-en="About HookManga" data-jp="HookMangaについて"></h2><br>
-
-  <p data-en="HookManga is an AI-powered tool designed to help creators generate compelling manga story hooks."
-     data-jp="HookMangaは漫画の魅力的なストーリーフックを生成するAIツールです。"></p><br>
-
-  <p data-en="Built for creators, storytellers, and Web3 artists."
-     data-jp="クリエイターやストーリーテラー、Web3アーティストのために開発されています。"></p>
-</section>
+<div id="about" class="section card">
+  <h2>About</h2><br>
+  <p>HookManga is an AI-powered tool designed to craft high-retention story hooks.</p>
+</div>
 
 <!-- LEGAL -->
-<section id="legal" class="section">
-  <h2 data-en="Legal" data-jp="法的情報"></h2><br>
-
-  <p data-en="This tool is provided as-is without warranty."
-     data-jp="本ツールは保証なしで提供されます。"></p><br>
-
-  <p data-en="Users are responsible for their own content."
-     data-jp="ユーザーは自身のコンテンツに責任を持ちます。"></p><br>
-
-  <p data-en="We do not store personal data."
-     data-jp="個人データは保存されません。"></p>
-</section>
+<div id="legal" class="section card">
+  <h2>Legal</h2><br>
+  <p>All outputs are generated content. Use responsibly.</p>
+</div>
 
 <footer>
-  <p>© 2026 HookManga</p>
-
-  <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
-    <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=light" width="200">
-  </a>
+  © 2026 HookManga
 </footer>
 
 <script>
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.menu span').forEach(s=>s.classList.remove('active'));
+  event.target.classList.add('active');
 }
-
-let lang = "en";
-
-function setLang(l){
-  lang = l;
-  document.querySelectorAll('[data-en]').forEach(el=>{
-    el.innerText = el.dataset[l];
-  });
-}
-
-setLang("en");
 
 function generate(){
-  let hooks = [
-    "He thought it was safe… until it wasn't.",
-    "She loved him… but he was her enemy.",
-    "The world ended yesterday. He remembers.",
-    "He awakened power—and lost everything.",
-    "This time, he won’t fail again."
+  const hooks = [
+    "He thought it was over… but it was just the beginning.",
+    "She killed him once. Now he’s back.",
+    "The world forgot him—but he remembers everything.",
+    "He became the villain to save her.",
+    "One choice changed everything."
   ];
   document.getElementById("output").innerText =
     hooks[Math.floor(Math.random()*hooks.length)];
 }
+
+function setLang(lang){
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    el.innerHTML = el.dataset[lang];
+  });
+}
+
+setLang("en");
 </script>
 
 </body>
