@@ -4,224 +4,754 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HookManga</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
-
-body{
-  background:#050505;
-  color:white;
+:root {
+  --red: #ff2d55;
+  --red-dim: rgba(255,45,85,0.15);
+  --blue-dim: rgba(0,120,255,0.08);
+  --bg: #060608;
+  --surface: #0e0e12;
+  --surface2: #16161c;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0f0f2;
+  --muted: rgba(240,240,242,0.4);
 }
 
-/* BG */
-.bg{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle at 30% 20%, rgba(255,45,85,0.15), transparent 40%),
-             radial-gradient(circle at 70% 80%, rgba(0,120,255,0.12), transparent 40%);
-  z-index:-1;
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
 }
 
-/* HEADER */
-header{
-  display:flex;
-  justify-content:space-between;
-  padding:14px 18px;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.logo{font-weight:700}
-.logo span{color:#ff2d55}
-
-.lang span{
-  margin-left:10px;
-  opacity:0.6;
-  cursor:pointer;
+/* ── BACKGROUND ── */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(255,45,85,0.12), transparent),
+    radial-gradient(ellipse 50% 50% at 85% 85%, rgba(0,100,255,0.08), transparent);
+  pointer-events: none;
 }
 
-/* MENU */
-.menu{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  padding:12px;
-  font-size:14px;
+.bg-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px;
+  pointer-events: none;
 }
 
-.menu span{
-  opacity:0.5;
-  cursor:pointer;
+/* ── HEADER ── */
+header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
 }
 
-.menu span.active{
-  opacity:1;
-  color:#ff2d55;
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
-/* HERO */
-.hero{
-  text-align:center;
-  padding:50px 20px 20px;
+.logo-hook { color: var(--text); }
+.logo-manga { color: var(--red); }
+
+.logo-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  margin-bottom: 2px;
+  animation: pulse 2s ease-in-out infinite;
 }
 
-.hero h1{
-  font-size:24px;
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
 }
 
-.hero span{
-  background:linear-gradient(90deg,#ff2d55,#ff7aa2);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+.lang-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
 }
 
-.hero p{
-  opacity:0.6;
-  font-size:14px;
+.lang-toggle span {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s;
 }
 
-/* CARD */
-.card{
-  max-width:500px;
-  margin:20px auto;
-  padding:20px;
-  background:rgba(255,255,255,0.03);
-  border-radius:16px;
+.lang-toggle span.active,
+.lang-toggle span:hover {
+  background: var(--red);
+  color: white;
 }
 
-/* INPUT */
-textarea{
-  width:100%;
-  height:120px;
-  background:#0f0f0f;
-  border:none;
-  border-radius:12px;
-  padding:12px;
-  color:white;
+/* ── NAV ── */
+nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
 }
 
-/* BUTTON */
-button{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#ff2d55;
-  color:white;
-  cursor:pointer;
+nav span {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s;
 }
 
-/* OUTPUT */
-.output{
-  margin-top:12px;
-  padding:12px;
-  background:#0f0f0f;
-  border-radius:12px;
+nav span:hover { color: var(--text); background: var(--surface); }
+nav span.active { color: var(--red); background: var(--red-dim); }
+
+/* ── MAIN ── */
+main {
+  position: relative;
+  z-index: 5;
 }
 
-/* SECTION */
-.section{display:none}
-.section.active{display:block}
+/* ── SECTION VISIBILITY ── */
+.section { display: none; }
+.section.active { display: block; }
 
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:40px 20px;
-  opacity:0.7;
+/* ── HOME ── */
+#home {
+  padding: 0 20px 60px;
+  max-width: 560px;
+  margin: 0 auto;
 }
 
-.badge{
-  margin-top:15px;
+/* ── HERO ── */
+.hero {
+  padding: 48px 0 32px;
+  text-align: center;
 }
 
-.badge img{
-  width:170px;
-  border-radius:12px;
-  opacity:0.9;
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+  padding: 5px 12px;
+  border: 1px solid rgba(255,45,85,0.3);
+  border-radius: 20px;
 }
+
+.hero-eyebrow::before {
+  content: '';
+  width: 5px; height: 5px;
+  background: var(--red);
+  border-radius: 50%;
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 10vw, 58px);
+  line-height: 0.95;
+  letter-spacing: 0.03em;
+  margin-bottom: 14px;
+}
+
+.hero h1 .accent {
+  background: linear-gradient(100deg, #ff2d55 0%, #ff7aa2 60%, #ff2d55 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero p {
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,45,85,0.4), transparent);
+}
+
+/* ── TEXTAREA ── */
+.input-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.input-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+textarea {
+  width: 100%;
+  height: 110px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  line-height: 1.5;
+}
+
+textarea::placeholder { color: var(--muted); font-style: italic; }
+textarea:focus { border-color: rgba(255,45,85,0.4); }
+
+/* ── BUTTON ── */
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--red);
+  color: white;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(255,45,85,0.25);
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(255,45,85,0.4);
+}
+
+button:active { transform: translateY(0); }
+
+/* ── OUTPUT ── */
+.output-wrap {
+  margin-top: 12px;
+}
+
+.output-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.output {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.output.empty {
+  border-style: dashed;
+}
+
+.output-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--muted);
+  text-align: center;
+}
+
+.output.has-content .output-text {
+  color: var(--text);
+  font-size: 16px;
+}
+
+.output.has-content {
+  border-color: rgba(255,45,85,0.2);
+  background: linear-gradient(135deg, rgba(255,45,85,0.04), var(--bg));
+}
+
+/* ── INFO SECTIONS ── */
+.info-section {
+  max-width: 560px;
+  margin: 40px auto;
+  padding: 0 20px 60px;
+}
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,45,85,0.4), transparent);
+}
+
+.info-card h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.info-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--red);
+  line-height: 1;
+  min-width: 24px;
+}
+
+.step-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+  padding-top: 4px;
+}
+
+.step-text strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ── TEAM ── */
+.team-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.team-member {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: border-color 0.2s;
+}
+
+.team-member:hover {
+  border-color: rgba(255,45,85,0.25);
+}
+
+.member-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.member-avatar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+}
+
+.member-info { flex: 1; min-width: 0; }
+
+.member-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.member-name span {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+
+.member-role {
+  font-size: 12px;
+  color: var(--red);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.member-bio {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.member-tag {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.team-footer-note {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 32px 20px 40px;
+  border-top: 1px solid var(--border);
+}
+
+footer p {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.badge {
+  margin-top: 14px;
+}
+
+.badge img {
+  width: 160px;
+  border-radius: 10px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.badge img:hover { opacity: 1; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section.active > * {
+  animation: fadeUp 0.35s ease both;
+}
+
+.section.active > *:nth-child(2) { animation-delay: 0.05s; }
+.section.active > *:nth-child(3) { animation-delay: 0.1s; }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<div class="bg-layer"></div>
+<div class="bg-grain"></div>
 
 <header>
-  <div class="logo">HOOK<span>MANGA</span></div>
-  <div class="lang">
-    <span onclick="setLang('en')">EN</span>
-    <span onclick="setLang('jp')">JP</span>
+  <div class="logo">
+    <span class="logo-hook">HOOK</span>
+    <div class="logo-dot"></div>
+    <span class="logo-manga">MANGA</span>
+  </div>
+  <div class="lang-toggle">
+    <span class="active" onclick="setLang('en', this)">EN</span>
+    <span onclick="setLang('jp', this)">JP</span>
   </div>
 </header>
 
-<div class="menu">
-  <span onclick="show('home')" class="active">Home</span>
-  <span onclick="show('how')">How</span>
-  <span onclick="show('about')">About</span>
-  <span onclick="show('legal')">Legal</span>
-</div>
+<nav>
+  <span class="active" onclick="show('home', this)" data-en="Home" data-jp="ホーム">Home</span>
+  <span onclick="show('how', this)" data-en="How" data-jp="使い方">How</span>
+  <span onclick="show('about', this)" data-en="About" data-jp="概要">About</span>
+  <span onclick="show('legal', this)" data-en="Legal" data-jp="法的事項">Legal</span>
+  <span onclick="show('team', this)" data-en="Team" data-jp="チーム">Team</span>
+</nav>
 
-<!-- HOME -->
-<div id="home" class="section active">
+<main>
 
-  <div class="hero">
-    <h1 data-en="Generate <span>Viral</span> Manga Hooks"
-        data-jp="バイラル<span>漫画フック</span>を生成"></h1>
+  <!-- HOME -->
+  <div id="home" class="section active">
+    <div style="max-width:560px;margin:0 auto;padding:0 20px 60px">
 
-    <p data-en="Create emotional story hooks in seconds"
-       data-jp="数秒で感情的なストーリーを生成"></p>
+      <div class="hero">
+        <div class="hero-eyebrow" data-en="AI Story Generator" data-jp="AIストーリー生成">AI Story Generator</div>
+        <h1 data-en="Generate <span class='accent'>Viral</span> Manga Hooks" data-jp="バイラル<span class='accent'>漫画フック</span>を生成">
+          Generate <span class="accent">Viral</span> Manga Hooks
+        </h1>
+        <p data-en="Create emotional story hooks in seconds" data-jp="数秒で感情的なストーリーを生成">
+          Create emotional story hooks in seconds
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="input-wrap">
+          <label class="input-label" data-en="Your Idea" data-jp="アイデア">Your Idea</label>
+          <textarea id="input" placeholder="Describe your manga idea..."></textarea>
+        </div>
+
+        <button onclick="generate()" id="gen-btn">
+          <span data-en="GENERATE HOOK" data-jp="フック生成">GENERATE HOOK</span>
+        </button>
+
+        <div class="output-wrap">
+          <div class="output-label" data-en="Result" data-jp="結果">Result</div>
+          <div class="output empty" id="output">
+            <span class="output-text" id="output-text" data-en="Your hook will appear here…" data-jp="フックがここに表示されます…">Your hook will appear here…</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="card">
-    <textarea id="input" placeholder="Describe your idea..."></textarea>
-    <button onclick="generate()">Generate</button>
-    <div class="output" id="output">...</div>
+  <!-- HOW -->
+  <div id="how" class="section">
+    <div class="info-section">
+      <div class="info-card">
+        <h2 data-en="How It Works" data-jp="使い方">How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text" data-en="<strong>Describe</strong> — Write your manga idea, genre, or character concept." data-jp="<strong>説明</strong> — 漫画のアイデアやジャンルを入力。"><strong>Describe</strong> — Write your manga idea, genre, or character concept.</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text" data-en="<strong>Generate</strong> — Hit the button and get an emotional, high-retention hook." data-jp="<strong>生成</strong> — ボタンを押して感情的なフックを取得。"><strong>Generate</strong> — Hit the button and get an emotional, high-retention hook.</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text" data-en="<strong>Go Viral</strong> — Use the hook as your opening panel caption or social post." data-jp="<strong>拡散</strong> — フックを冒頭のセリフやSNSに活用。"><strong>Go Viral</strong> — Use the hook as your opening panel caption or social post.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-</div>
+  <!-- ABOUT -->
+  <div id="about" class="section">
+    <div class="info-section">
+      <div class="info-card">
+        <h2 data-en="About HookManga" data-jp="HookMangaについて">About HookManga</h2>
+        <p data-en="HookManga is an AI tool built for manga creators who want to open strong. A great hook stops the scroll, builds emotional tension, and makes readers demand more. We generate them in seconds." data-jp="HookMangaは、漫画クリエイターのためのAIツールです。優れたフックはスクロールを止め、感情的な緊張を生み、読者をもっと読みたくさせます。数秒で生成します。">
+          HookManga is an AI tool built for manga creators who want to open strong. A great hook stops the scroll, builds emotional tension, and makes readers demand more. We generate them in seconds.
+        </p>
+      </div>
+    </div>
+  </div>
 
-<!-- HOW -->
-<div id="how" class="section card">
-  <h2>How</h2><br>
-  <p data-en="Describe → Generate → Go Viral"
-     data-jp="説明 → 生成 → バイラル"></p>
-</div>
+  <!-- LEGAL -->
+  <div id="legal" class="section">
+    <div class="info-section">
+      <div class="info-card">
+        <h2 data-en="Legal" data-jp="法的事項">Legal</h2>
+        <p data-en="Use at your own risk. Generated content is provided as-is with no guarantees. HookManga is not responsible for how generated hooks are used. All output is AI-generated and may require editing." data-jp="自己責任でご使用ください。生成されたコンテンツはそのまま提供され、保証はありません。HookMangaは生成されたフックの使用方法について責任を負いません。">
+          Use at your own risk. Generated content is provided as-is with no guarantees. HookManga is not responsible for how generated hooks are used. All output is AI-generated and may require editing.
+        </p>
+      </div>
+    </div>
+  </div>
 
-<!-- ABOUT -->
-<div id="about" class="section card">
-  <h2>About</h2><br>
-  <p data-en="AI tool for creating high-retention manga hooks."
-     data-jp="高いリテンションの漫画フックを生成するAIツール。"></p>
-</div>
+  <!-- TEAM -->
+  <div id="team" class="section">
+    <div class="info-section">
+      <div class="info-card">
+        <h2 data-en="The Team" data-jp="チームメンバー">The Team</h2>
 
-<!-- LEGAL -->
-<div id="legal" class="section card">
-  <h2>Legal</h2><br>
-  <p data-en="Use at your own risk."
-     data-jp="自己責任で使用してください。"></p>
-</div>
+        <div class="team-grid">
+
+          <div class="team-member">
+            <div class="member-avatar" style="background:linear-gradient(135deg,#ff2d55,#8b1a2e)">S</div>
+            <div class="member-info">
+              <div class="member-name">Sixtina <span>シックスティーナ</span></div>
+              <div class="member-role">Founder & Builder</div>
+              <div class="member-bio" data-en="Built HookManga from scratch. Ships fast, breaks things, fixes faster." data-jp="HookMangaをゼロから構築。高速でリリース、問題を修正。">Built HookManga from scratch. Ships fast, breaks things, fixes faster.</div>
+            </div>
+            <a href="https://x.com/0xsixtina" target="_blank" class="member-tag">@0xsixtina</a>
+          </div>
+
+          <div class="team-member">
+            <div class="member-avatar" style="background:linear-gradient(135deg,#4a90e2,#1a3a6e)">K</div>
+            <div class="member-info">
+              <div class="member-name">Kenji Arao <span>荒尾 健司</span></div>
+              <div class="member-role">Narrative Director</div>
+              <div class="member-bio" data-en="10+ years in manga storytelling. Crafts the hook formulas behind the engine." data-jp="漫画ストーリーテリング10年以上。エンジンのフック公式を設計。">10+ years in manga storytelling. Crafts the hook formulas behind the engine.</div>
+            </div>
+            <span class="member-tag">Tokyo</span>
+          </div>
+
+          <div class="team-member">
+            <div class="member-avatar" style="background:linear-gradient(135deg,#7c3aed,#3b1578)">M</div>
+            <div class="member-info">
+              <div class="member-name">Mio Tanaka <span>田中 澪</span></div>
+              <div class="member-role">AI Research</div>
+              <div class="member-bio" data-en="Trains models on high-retention story patterns. Obsessed with the first line." data-jp="高リテンションパターンでモデルをトレーニング。冒頭の一行に執着。">Trains models on high-retention story patterns. Obsessed with the first line.</div>
+            </div>
+            <span class="member-tag">Osaka</span>
+          </div>
+
+          <div class="team-member">
+            <div class="member-avatar" style="background:linear-gradient(135deg,#059669,#064e3b)">R</div>
+            <div class="member-info">
+              <div class="member-name">Ren Ishida <span>石田 蓮</span></div>
+              <div class="member-role">Design & UI</div>
+              <div class="member-bio" data-en="Brings manga visual language into the interface. Dark mode purist." data-jp="漫画のビジュアル言語をインターフェースに落とし込む。ダークモード至上主義。">Brings manga visual language into the interface. Dark mode purist.</div>
+            </div>
+            <span class="member-tag">Kyoto</span>
+          </div>
+
+        </div>
+
+        <p class="team-footer-note" data-en="A small team with a big obsession — making the first panel impossible to ignore." data-jp="小さなチーム、大きな執念 — 最初のコマを無視できないものにする。">
+          A small team with a big obsession — making the first panel impossible to ignore.
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+</main>
 
 <footer>
-  <p>© 2026 HookManga</p>
-
+  <p>© 2026 HookManga &nbsp;·&nbsp; Built by <a href="https://x.com/0xsixtina" target="_blank" style="color:var(--red);text-decoration:none;font-weight:500">@0xsixtina</a></p>
   <div class="badge">
     <a href="https://orynth.dev/projects/https-www-hookmanga-biz-id" target="_blank">
-      <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=dark">
+      <img src="https://orynth.dev/api/badge/https-www-hookmanga-biz-id?theme=dark" alt="Orynth Badge">
     </a>
   </div>
 </footer>
 
 <script>
-function show(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+let currentLang = 'en';
 
-  document.querySelectorAll('.menu span').forEach(s=>s.classList.remove('active'));
-  event.target.classList.add('active');
+function show(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav span').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
 }
 
-function generate(){
+function generate() {
   const hooks = [
     "He thought it was over… but it was just beginning.",
     "She loved him… but had to kill him.",
@@ -229,17 +759,31 @@ function generate(){
     "He became the villain to save her.",
     "One choice changed everything."
   ];
-  document.getElementById("output").innerText =
-    hooks[Math.floor(Math.random()*hooks.length)];
+  const out = document.getElementById('output');
+  const text = document.getElementById('output-text');
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
+  text.textContent = hook;
+  out.classList.remove('empty');
+  out.classList.add('has-content');
 }
 
-function setLang(lang){
-  document.querySelectorAll('[data-en]').forEach(el=>{
-    el.innerHTML = el.dataset[lang];
+function setLang(lang, el) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-toggle span').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('[data-en]').forEach(node => {
+    const val = node.dataset[lang];
+    if (!val) return;
+    if (node.tagName === 'TEXTAREA') {
+      node.placeholder = val;
+    } else {
+      node.innerHTML = val;
+    }
   });
 }
 
-setLang("en");
+setLang('en', document.querySelector('.lang-toggle span'));
 </script>
 
 </body>
